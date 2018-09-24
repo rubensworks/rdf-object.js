@@ -17,11 +17,11 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<{[predicate: str
   }
 
   public get(target: {[predicate: string]: T[]}, p: PropertyKey): T[] {
-    return target[ContextParser.expandPrefixedTerm(<string> p, this.context)] || [];
+    return target[ContextParser.expandPrefixedTerm(this.toTermString(p), this.context)] || [];
   }
 
   public set(target: {[predicate: string]: T[]}, p: PropertyKey, value: any): boolean {
-    target[ContextParser.expandPrefixedTerm(<string> p, this.context)] = value;
+    target[ContextParser.expandPrefixedTerm(this.toTermString(p), this.context)] = value;
     return true;
   }
 
@@ -29,6 +29,10 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<{[predicate: str
     return Object.keys(target)
       .map((key: string) => ContextParser.expandPrefixedTerm(key, this.context))
       .filter((key) => this.has(target, key));
+  }
+
+  private toTermString(p: PropertyKey) {
+    return typeof p === 'string' ? p : String(p);
   }
 
 }
