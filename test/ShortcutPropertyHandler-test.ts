@@ -14,10 +14,6 @@ describe('ShortcutPropertyHandler', () => {
       return expect(object).toBeTruthy();
     });
 
-    it('proxy should prevent extensions', () => {
-      expect(object.preventExtensions).toBeTruthy();
-    });
-
     it('proxy should not have a non-existing property', () => {
       expect('a' in object).toBeFalsy();
     });
@@ -73,10 +69,6 @@ describe('ShortcutPropertyHandler', () => {
 
     it('should be usable as a proxy handler', () => {
       return expect(object).toBeTruthy();
-    });
-
-    it('proxy should prevent extensions', () => {
-      expect(object.preventExtensions).toBeTruthy();
     });
 
     it('proxy should not have a non-existing property', () => {
