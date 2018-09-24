@@ -1,1 +1,1 @@
-
+export * from "./lib/ShortcutPropertyHandler";
