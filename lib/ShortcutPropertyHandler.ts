@@ -17,17 +17,17 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<{[predicate: str
   }
 
   public get(target: {[predicate: string]: T[]}, p: PropertyKey): T[] {
-    return target[ContextParser.expandPrefixedTerm(this.toTermString(p), this.context)] || [];
+    return target[ContextParser.expandTerm(this.toTermString(p), this.context)] || [];
   }
 
   public set(target: {[predicate: string]: T[]}, p: PropertyKey, value: any): boolean {
-    target[ContextParser.expandPrefixedTerm(this.toTermString(p), this.context)] = value;
+    target[ContextParser.expandTerm(this.toTermString(p), this.context)] = value;
     return true;
   }
 
   public ownKeys(target: {[predicate: string]: T[]}): PropertyKey[] {
     return Object.keys(target)
-      .map((key: string) => ContextParser.expandPrefixedTerm(key, this.context))
+      .map((key: string) => ContextParser.expandTerm(key, this.context))
       .filter((key) => this.has(target, key));
   }
 
