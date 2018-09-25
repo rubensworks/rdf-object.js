@@ -1,0 +1,82 @@
+import {namedNode} from "@rdfjs/data-model";
+import * as RDF from "rdf-js";
+import {stringToTerm, termToString} from "rdf-string";
+
+/**
+ * A helper class for converting RDF lists to JavaScript RDF term term lists
+ */
+export class RdfListMaterializer {
+
+  private static readonly RDF_FIRST: RDF.NamedNode = namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first');
+  private static readonly RDF_REST: RDF.NamedNode = namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest');
+  private static readonly RDF_NIL: RDF.NamedNode = namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil');
+
+  private readonly chains: {[id: string]: { first: RDF.Term, rest: RDF.Term }} = {};
+
+  protected static addChain(chains: {[id: string]: { first: RDF.Term, rest: RDF.Term }}, subject: RDF.Term,
+                            object: RDF.Term, type: 'first' | 'rest') {
+    const hash: string = termToString(subject);
+    if (!chains[hash]) {
+      chains[hash] = <{ first: RDF.Term, rest: RDF.Term }> {};
+    }
+    chains[hash][type] = object;
+  }
+
+  protected static materializeChain(root: RDF.Term, chains: {[id: string]: { first: RDF.Term, rest: RDF.Term }},
+                                    array?: RDF.Term[]): RDF.Term[] {
+    if (!array) {
+      array = [];
+    }
+
+    const hash: string = termToString(root);
+    const chain = chains[hash];
+    if (chain && chain.first && chain.rest) {
+      array.push(chain.first);
+      if (!chain.rest.equals(RdfListMaterializer.RDF_NIL)) {
+        return RdfListMaterializer.materializeChain(chain.rest, chains, array);
+      } else {
+        return array;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Import the given RDF stream.
+   * @param {Stream} stream An RDF stream.
+   * @return {Promise<void>} A promise that resolves once the stream has ended.
+   */
+  public import(stream: RDF.Stream): Promise<void> {
+    return new Promise((resolve, reject) => {
+      stream.on('data', (quad: RDF.Quad) => {
+        if (quad.predicate.equals(RdfListMaterializer.RDF_FIRST)) {
+          RdfListMaterializer.addChain(this.chains, quad.subject, quad.object, 'first');
+        } else if (quad.predicate.equals(RdfListMaterializer.RDF_REST)) {
+          RdfListMaterializer.addChain(this.chains, quad.subject, quad.object, 'rest');
+        }
+      });
+      stream.on('error', reject);
+      stream.on('end', resolve);
+    });
+  }
+
+  /**
+   * Get the list identified by the given starting term.
+   * @param {Term} root A root RDF term that identifies an RDF list.
+   * @return {Term[]} A list of terms, or null if the given root is not a list.
+   */
+  public getList(root: RDF.Term): RDF.Term[] {
+    return RdfListMaterializer.materializeChain(root, this.chains);
+  }
+
+  /**
+   * @return {Term[]} All available list roots.
+   */
+  public getRoots(): RDF.Term[] {
+    return Object.keys(this.chains)
+      .filter((key) => this.chains[key].first && this.chains[key].rest)
+      .map((key) => stringToTerm(key));
+  }
+
+}
