@@ -62,7 +62,8 @@ const context = {
   'label': 'rdfs:label',
   'foaf': 'http://xmlns.com/foaf/0.1/',
   'knows': 'foaf:knows',
-  'name': 'foaf:name'
+  'name': 'foaf:name',
+  'ex': 'http://example.org/'
 };
 const myLoader = new RdfObjectLoader({ context });
 ```
@@ -168,6 +169,35 @@ myLoader.importArray([
   }
 });
 ```
+
+### Conveniently access RDF lists
+
+RDF lists are automatically parsed
+and exposed as a JavaScript array via the
+`list` field on `Resource`.
+
+```javascript
+// Import triples
+myLoader.importArray([
+  triple(namedNode('http://example.org/myResource'), namedNode('http://example.org/list'), namedNode('http://example.org/myList0')),
+  triple(namedNode('http://example.org/myList0'), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'), literal('A')),
+  triple(namedNode('http://example.org/myList0'), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), namedNode('http://example.org/myList1')),
+  triple(namedNode('http://example.org/myList1'), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'), literal('B')),
+  triple(namedNode('http://example.org/myList1'), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), namedNode('http://example.org/myList2')),
+  triple(namedNode('http://example.org/myList2'), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'), literal('C')),
+  triple(namedNode('http://example.org/myList2'), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
+]).then(() => {
+  // Get friend names via nested resources
+  const myResource = myLoader.resources['http://example.org/myResource'];
+  console.log(`List values of ${myResource}`);
+  for (const listElement of myResource.property['ex:list'].list) {
+    console.log(`* ${listElement}`);
+  }
+});
+```
+
+If you don't want RDF lists to be parsed automatically,
+you can set `normalizeLists` to `false` in the `RdfObjectLoader` constructor.
 
 ## License
 This software is written by [Ruben Taelman](http://rubensworks.net/).
