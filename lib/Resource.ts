@@ -76,6 +76,13 @@ export class Resource {
     this.predicates.push(predicate);
   }
 
+  /**
+   * @return {string} The string representation of a Resource
+   */
+  public toString(): string {
+    return this.value;
+  }
+
 }
 
 export interface IResourceArgs {

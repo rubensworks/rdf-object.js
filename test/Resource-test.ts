@@ -28,6 +28,10 @@ describe('Resource', () => {
       return expect(resource.value).toEqual('http://example.org/resource1');
     });
 
+    it('should have the correct toString() value', () => {
+      return expect(resource.toString()).toEqual('http://example.org/resource1');
+    });
+
     it('should be itself', () => {
       return expect(resource.isA(namedNode('http://example.org/resource1'))).toBeTruthy();
     });
