@@ -14,6 +14,7 @@ export class Resource {
   public readonly propertiesUri: {[predicate: string]: Resource[]};
   public readonly properties: {[shortcut: string]: Resource[]};
   public readonly property: {[shortcut: string]: Resource};
+  public list: Resource[];
 
   constructor(args: IResourceArgs) {
     this.term = args.term;
