@@ -1,7 +1,7 @@
 {
   "name": "rdf-object",
   "version": "1.0.0",
-  "description": "Loads RDF streams in memory as JSON objects",
+  "description": "Loads RDF as JSON objects",
   "keywords": [
     "rdf",
     "object",
