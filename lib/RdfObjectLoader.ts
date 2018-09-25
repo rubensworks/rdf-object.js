@@ -9,11 +9,6 @@ import {Resource} from "./Resource";
  */
 export class RdfObjectLoader {
 
-  public static CONTEXT_DEFAULT: IJsonLdContextNormalized = {
-    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-  };
-
   public readonly normalizeLists: boolean;
   public readonly context: Promise<IJsonLdContextNormalized>;
   public readonly resources: { [term: string]: Resource } = {};
@@ -27,7 +22,7 @@ export class RdfObjectLoader {
     if (this.normalizeLists !== false) {
       this.normalizeLists = true;
     }
-    this.context = new ContextParser().parse(Object.assign({}, RdfObjectLoader.CONTEXT_DEFAULT, this.context || {}));
+    this.context = new ContextParser().parse(this.context || {});
     this.context.then((contextResolved) => this.contextResolved = contextResolved);
   }
 
