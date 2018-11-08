@@ -46,10 +46,11 @@ export class RdfListMaterializer {
    * Import the given RDF stream.
    * @param {Stream} stream An RDF stream.
    * @return {Promise<void>} A promise that resolves once the stream has ended.
+   * @template Q The type of quad, defaults to RDF.Quad.
    */
-  public import(stream: RDF.Stream): Promise<void> {
+  public import<Q extends RDF.BaseQuad = RDF.Quad>(stream: RDF.Stream<Q>): Promise<void> {
     return new Promise((resolve, reject) => {
-      stream.on('data', (quad: RDF.Quad) => {
+      stream.on('data', (quad: Q) => {
         if (quad.predicate.equals(RdfListMaterializer.RDF_FIRST)) {
           RdfListMaterializer.addChain(this.chains, quad.subject, quad.object, 'first');
         } else if (quad.predicate.equals(RdfListMaterializer.RDF_REST)) {

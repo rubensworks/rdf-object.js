@@ -1,4 +1,5 @@
-import {literal, namedNode} from "@rdfjs/data-model";
+import {blankNode, literal, namedNode, quad as rawQuad} from "@rdfjs/data-model";
+import * as RDF from "rdf-js";
 import {RdfObjectLoader} from "../lib/RdfObjectLoader";
 import {Resource} from "../lib/Resource";
 
@@ -34,6 +35,25 @@ describe('RdfObjectLoader', () => {
           'http://example.org/o': resourceO,
           'http://example.org/p': resourceP,
           'http://example.org/s': resourceS,
+        });
+      });
+
+      it('should import with one generalized quad', async () => {
+        await loader.import(<RDF.Stream<RDF.BaseQuad>> streamifyArray([
+          rawQuad<RDF.BaseQuad>(
+            blankNode('http://example.org/s'),
+            blankNode('http://example.org/p'),
+            blankNode('http://example.org/o'),
+          ),
+        ]));
+        const resourceO = loader.getOrMakeResource(blankNode('http://example.org/o'));
+        const resourceP = loader.getOrMakeResource(blankNode('http://example.org/p'));
+        const resourceS = loader.getOrMakeResource(blankNode('http://example.org/s'));
+        resourceS.addProperty(resourceP, resourceO);
+        expect(loader.resources).toEqual({
+          '_:http://example.org/o': resourceO,
+          '_:http://example.org/p': resourceP,
+          '_:http://example.org/s': resourceS,
         });
       });
 

@@ -47,15 +47,16 @@ export class RdfObjectLoader {
    * Resources will be created and linked for all passed terms.
    * @param {Stream} stream A stream of RDF quads.
    * @return {Promise<void>} A promise that resolves when the stream has ended.
+   * @template Q The type of quad, defaults to RDF.Quad.
    */
-  public import(stream: RDF.Stream): Promise<void> {
+  public import<Q extends RDF.BaseQuad = RDF.Quad>(stream: RDF.Stream<Q>): Promise<void> {
     return new Promise(async (resolve, reject) => {
       await this.context;
       const listMaterializer = new RdfListMaterializer();
       if (this.normalizeLists) {
         listMaterializer.import(stream);
       }
-      stream.on('data', (quad: RDF.Quad) => {
+      stream.on('data', (quad: Q) => {
         const subject: Resource = this.getOrMakeResource(quad.subject);
         const predicate: Resource = this.getOrMakeResource(quad.predicate);
         const object: Resource = this.getOrMakeResource(quad.object);
@@ -77,10 +78,11 @@ export class RdfObjectLoader {
   /**
    * Import the given array of RDF quads.
    * Resources will be created and linked for all passed terms.
-   * @param {RDF.Quad[]} quads An array of RDF quads.
+   * @param {Q[]} quads An array of RDF quads.
    * @return {Promise<void>} A promise that resolves when the array has been fully imported.
+   * @template Q The type of quad, defaults to RDF.Quad.
    */
-  public importArray(quads: RDF.Quad[]): Promise<void> {
+  public importArray<Q extends RDF.BaseQuad = RDF.Quad>(quads: Q[]): Promise<void> {
     return this.import(require('streamify-array')(quads));
   }
 }
