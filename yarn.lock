@@ -2285,12 +2285,13 @@ json5@^0.5.1:
   resolved "https://registry.yarnpkg.com/json5/-/json5-0.5.1.tgz#1eade7acc012034ad84e2396767ead9fa5495821"
   integrity sha1-Hq3nrMASA0rYTiOWdn6tn6VJWCE=
 
-jsonld-context-parser@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/jsonld-context-parser/-/jsonld-context-parser-1.0.1.tgz#c055a0f0d34a5812907308b67e0634dc047ec6a8"
-  integrity sha512-jOFJ3E0/Ugd84KrXnxka2qSVJYo/9xWDnS1HK8MRu/yd6/IvkAaDi8RC44W/anRArMzl7b7DVm+ZFf12vkD9yg==
+jsonld-context-parser@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/jsonld-context-parser/-/jsonld-context-parser-1.1.0.tgz#da7fedc5418c781ddd9dfa520d9a2987f5f5bd3d"
+  integrity sha512-2WcgAxD00c90L48ccvC1XcQiBqrLgErb2AjxNN6NQkB1bCBn2T8N+ncZjCxeD6B7YB8ixyuvqD0N6yG73v9jRw==
   dependencies:
     isomorphic-fetch "^2.2.1"
+    relative-to-absolute-iri "^1.0.2"
 
 jsprim@^1.2.2:
   version "1.4.1"
@@ -3296,6 +3297,11 @@ regex-not@^1.0.0, regex-not@^1.0.2:
   dependencies:
     extend-shallow "^3.0.2"
     safe-regex "^1.1.0"
+
+relative-to-absolute-iri@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/relative-to-absolute-iri/-/relative-to-absolute-iri-1.0.2.tgz#5ad2fa26569f46523ab8428cb7d5247005c51544"
+  integrity sha512-2tAsyCpb/ozT6w8BSaz//u7iRIW621FsMbC8el4VqzvtuntevEFfWNM/Wr9ubodzGa9OwBNwOHERRKqw9toKOA==
 
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
