@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.1.1"></a>
+## [v1.1.1](https://github.com/rubensworks/rdf-object.js/compare/v1.1.0...v1.1.1) - 2019-02-07
+
+### Changed
+* [Update to jsonld-context-parser@1.1.0](https://github.com/rubensworks/rdf-object.js/commit/9db628b2c3bbd8f37b82026e1fe944b6a3f5da9f)
+* [Expand terms in vocab-mode](https://github.com/rubensworks/rdf-object.js/commit/24e1120f49ed649daed8afd74b7f57e9290958ef)
+
 <a name="v1.1.0"></a>
 ## [v1.1.0](https://github.com/rubensworks/rdf-object.js/compare/v1.0.0...v1.1.0) - 2018-11-08
 
