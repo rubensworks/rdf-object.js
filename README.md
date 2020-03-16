@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rubensworks/rdf-object.js.svg?branch=master)](https://travis-ci.org/rubensworks/rdf-object.js)
 [![Coverage Status](https://coveralls.io/repos/github/rubensworks/rdf-object.js/badge.svg?branch=master)](https://coveralls.io/github/rubensworks/rdf-object.js?branch=master)
-[![npm version](https://badge.fury.io/js/rdf-object.svg)](https://www.npmjs.com/package/rdf-object) [![Greenkeeper badge](https://badges.greenkeeper.io/rubensworks/rdf-object.js.svg)](https://greenkeeper.io/)
+[![npm version](https://badge.fury.io/js/rdf-object.svg)](https://www.npmjs.com/package/rdf-object)
 
 RDF Object makes it easier to read RDF data
 by loading it as JSON objects.
