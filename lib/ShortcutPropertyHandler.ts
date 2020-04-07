@@ -1,4 +1,4 @@
-import {ContextParser, IJsonLdContextNormalized} from "jsonld-context-parser";
+import {JsonLdContextNormalized} from "jsonld-context-parser";
 
 /**
  * A proxy handler for exposing a URI-to-? map to shortcut-to-? map
@@ -6,9 +6,9 @@ import {ContextParser, IJsonLdContextNormalized} from "jsonld-context-parser";
  */
 export class ShortcutPropertyHandler<T> implements ProxyHandler<{[predicate: string]: T[]}> {
 
-  private readonly context: IJsonLdContextNormalized;
+  private readonly context: JsonLdContextNormalized;
 
-  constructor(context: IJsonLdContextNormalized) {
+  constructor(context: JsonLdContextNormalized) {
     this.context = context;
   }
 
@@ -17,17 +17,17 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<{[predicate: str
   }
 
   public get(target: {[predicate: string]: T[]}, p: PropertyKey): T[] {
-    return target[ContextParser.expandTerm(this.toTermString(p), this.context, true)] || [];
+    return target[this.context.expandTerm(this.toTermString(p), true)] || [];
   }
 
   public set(target: {[predicate: string]: T[]}, p: PropertyKey, value: any): boolean {
-    target[ContextParser.expandTerm(this.toTermString(p), this.context, true)] = value;
+    target[this.context.expandTerm(this.toTermString(p), true)] = value;
     return true;
   }
 
   public ownKeys(target: {[predicate: string]: T[]}): PropertyKey[] {
     return Object.keys(target)
-      .map((key: string) => ContextParser.expandTerm(key, this.context, true))
+      .map((key: string) => this.context.expandTerm(key, true))
       .filter((key) => this.has(target, key));
   }
 

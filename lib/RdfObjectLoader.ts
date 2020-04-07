@@ -1,4 +1,4 @@
-import {ContextParser, IJsonLdContextNormalized, JsonLdContext} from "jsonld-context-parser";
+import {ContextParser, JsonLdContextNormalized, JsonLdContext} from "jsonld-context-parser";
 import * as RDF from "rdf-js";
 import {termToString} from "rdf-string";
 import {RdfListMaterializer} from "./RdfListMaterializer";
@@ -10,9 +10,9 @@ import {Resource} from "./Resource";
 export class RdfObjectLoader {
 
   public readonly normalizeLists: boolean;
-  public readonly context: Promise<IJsonLdContextNormalized>;
+  public readonly context: Promise<JsonLdContextNormalized>;
   public readonly resources: { [term: string]: Resource } = {};
-  private contextResolved: IJsonLdContextNormalized;
+  private contextResolved: JsonLdContextNormalized;
 
   constructor(args?: IRdfClassLoaderArgs) {
     if (args) {

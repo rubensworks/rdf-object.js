@@ -1,10 +1,11 @@
 import {namedNode} from "@rdfjs/data-model";
 import * as RDF from "rdf-js";
 import {Resource} from "../lib/Resource";
+import {JsonLdContextNormalized} from "jsonld-context-parser";
 
-const context = {
+const context = new JsonLdContextNormalized({
   ex: 'http://example.org/',
-};
+});
 
 describe('Resource', () => {
   describe('constructed with a named node', () => {

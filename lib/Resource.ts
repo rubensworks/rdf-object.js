@@ -1,4 +1,4 @@
-import {IJsonLdContextNormalized} from "jsonld-context-parser";
+import {JsonLdContextNormalized} from "jsonld-context-parser";
 import * as RDF from "rdf-js";
 import {termToString} from "rdf-string";
 import {ShortcutPropertyHandler} from "./ShortcutPropertyHandler";
@@ -21,7 +21,8 @@ export class Resource {
 
     this.predicates = [];
     this.propertiesUri = {};
-    this.properties = new Proxy(this.propertiesUri, new ShortcutPropertyHandler(args.context || {}));
+    this.properties = new Proxy(this.propertiesUri, new ShortcutPropertyHandler(
+      args.context || new JsonLdContextNormalized({})));
     this.property = <any> new Proxy(this.properties, new SingularPropertyHandler());
   }
 
@@ -87,5 +88,5 @@ export class Resource {
 
 export interface IResourceArgs {
   term: RDF.Term;
-  context?: IJsonLdContextNormalized;
+  context?: JsonLdContextNormalized;
 }

@@ -1,8 +1,9 @@
 import {ShortcutPropertyHandler} from "../lib/ShortcutPropertyHandler";
+import {JsonLdContextNormalized} from "jsonld-context-parser";
 
 describe('ShortcutPropertyHandler', () => {
   describe('constructed with an empty JSON-LD context', () => {
-    const handler = new ShortcutPropertyHandler({});
+    const handler = new ShortcutPropertyHandler(new JsonLdContextNormalized({}));
     const raw: any = {
       none: [],
       one: ['a'],
@@ -57,9 +58,9 @@ describe('ShortcutPropertyHandler', () => {
   });
 
   describe('constructed with a non-empty JSON-LD context', () => {
-    const handler = new ShortcutPropertyHandler({
+    const handler = new ShortcutPropertyHandler(new JsonLdContextNormalized({
       ex: 'http://example.org/',
-    });
+    }));
     const raw: any = {
       'http://example.org/none': [],
       'http://example.org/one': ['a'],
