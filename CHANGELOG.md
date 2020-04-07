@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.2.0"></a>
+## [v1.2.0](https://github.com/rubensworks/rdf-object.js/compare/v1.1.0...v1.2.0) - 2020-04-07
+
+### Changed
+* [Bump to jsonld-context-parser 2.0.0 with support for JSON-LD 1.1, Closes #22](https://github.com/rubensworks/rdf-object.js/commit/5113bf2266c1d2249e62a19a028d62e65085e65b)
+
 <a name="v1.1.1"></a>
 ## [v1.1.1](https://github.com/rubensworks/rdf-object.js/compare/v1.1.0...v1.1.1) - 2019-02-07
 
