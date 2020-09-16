@@ -1,4 +1,4 @@
-import {namedNode} from "@rdfjs/data-model";
+import {DataFactory} from "rdf-data-factory";
 import * as RDF from "rdf-js";
 import {Resource} from "../lib/Resource";
 import {JsonLdContextNormalized} from "jsonld-context-parser";
@@ -6,6 +6,7 @@ import {JsonLdContextNormalized} from "jsonld-context-parser";
 const context = new JsonLdContextNormalized({
   ex: 'http://example.org/',
 });
+const DF = new DataFactory();
 
 describe('Resource', () => {
   describe('constructed with a named node', () => {
@@ -13,7 +14,7 @@ describe('Resource', () => {
     let resource: Resource;
 
     beforeEach(() => {
-      term = namedNode('http://example.org/resource1');
+      term = DF.namedNode('http://example.org/resource1');
       resource = new Resource({ term });
     });
 
@@ -34,7 +35,7 @@ describe('Resource', () => {
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(namedNode('http://example.org/resource1'))).toBeTruthy();
+      return expect(resource.isA(DF.namedNode('http://example.org/resource1'))).toBeTruthy();
     });
 
     it('should have no predicates', () => {
@@ -61,10 +62,10 @@ describe('Resource', () => {
     let object: Resource;
 
     beforeEach(() => {
-      term = namedNode('http://example.org/resource2');
+      term = DF.namedNode('http://example.org/resource2');
       resource = new Resource({ term, context });
-      predicate = new Resource({ term: namedNode('http://example.org/predicate1'), context });
-      object = new Resource({ term: namedNode('http://example.org/object1'), context });
+      predicate = new Resource({ term: DF.namedNode('http://example.org/predicate1'), context });
+      object = new Resource({ term: DF.namedNode('http://example.org/object1'), context });
       resource.addProperty(predicate, object);
     });
 
@@ -81,7 +82,7 @@ describe('Resource', () => {
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(namedNode('http://example.org/resource2'))).toBeTruthy();
+      return expect(resource.isA(DF.namedNode('http://example.org/resource2'))).toBeTruthy();
     });
 
     it('should have 1 predicate', () => {
@@ -108,40 +109,40 @@ describe('Resource', () => {
     let resource: Resource;
 
     beforeEach(() => {
-      term = namedNode('http://example.org/resource');
+      term = DF.namedNode('http://example.org/resource');
       resource = new Resource({ term, context });
       resource.addProperty(
-        new Resource({ term: namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), context }),
-        new Resource({ term: namedNode('http://example.org/Type1'), context }),
+        new Resource({ term: DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type1'), context }),
       );
       resource.addProperty(
-        new Resource({ term: namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), context }),
-        new Resource({ term: namedNode('http://example.org/Type2'), context }),
+        new Resource({ term: DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type2'), context }),
       );
       resource.addProperty(
-        new Resource({ term: namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), context }),
-        new Resource({ term: namedNode('http://example.org/Type3'), context }),
+        new Resource({ term: DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type3'), context }),
       );
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(namedNode('http://example.org/resource'))).toBeTruthy();
+      return expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
     });
 
     it('should be of Type1', () => {
-      return expect(resource.isA(namedNode('http://example.org/Type1'))).toBeTruthy();
+      return expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
     });
 
     it('should be of Type2', () => {
-      return expect(resource.isA(namedNode('http://example.org/Type2'))).toBeTruthy();
+      return expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
     });
 
     it('should be of Type3', () => {
-      return expect(resource.isA(namedNode('http://example.org/Type3'))).toBeTruthy();
+      return expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
     });
 
     it('should not be of Type4', () => {
-      return expect(resource.isA(namedNode('http://example.org/Type4'))).toBeFalsy();
+      return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
     });
   });
 });

@@ -1,9 +1,10 @@
-import {literal, namedNode} from "@rdfjs/data-model";
+import {DataFactory} from "rdf-data-factory";
 import {RdfListMaterializer} from "../lib/RdfListMaterializer";
 
 // tslint:disable:no-var-requires
 const streamifyArray = require('streamify-array');
 const quad = require('rdf-quad');
+const DF = new DataFactory();
 
 describe('RdfListMaterializer', () => {
   describe('an instance', () => {
@@ -17,7 +18,7 @@ describe('RdfListMaterializer', () => {
     it('should not have any lists for empty streams', async () => {
       await materializer.import(streamifyArray([]));
       expect(materializer.getRoots()).toEqual([]);
-      expect(materializer.getList(namedNode('http://example.org/l0'))).toBeFalsy();
+      expect(materializer.getList(DF.namedNode('http://example.org/l0'))).toBeFalsy();
     });
 
     it('should parse a valid list', async () => {
@@ -32,18 +33,18 @@ describe('RdfListMaterializer', () => {
           'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
       ]));
       expect(materializer.getRoots()).toEqual([
-        namedNode('http://example.org/l0'),
-        namedNode('http://example.org/l1'),
-        namedNode('http://example.org/l2'),
+        DF.namedNode('http://example.org/l0'),
+        DF.namedNode('http://example.org/l1'),
+        DF.namedNode('http://example.org/l2'),
       ]);
-      expect(materializer.getList(namedNode('http://example.org/l0'))).toEqual([
-        literal('A'), literal('B'), literal('C'),
+      expect(materializer.getList(DF.namedNode('http://example.org/l0'))).toEqual([
+        DF.literal('A'), DF.literal('B'), DF.literal('C'),
       ]);
-      expect(materializer.getList(namedNode('http://example.org/l1'))).toEqual([
-        literal('B'), literal('C'),
+      expect(materializer.getList(DF.namedNode('http://example.org/l1'))).toEqual([
+        DF.literal('B'), DF.literal('C'),
       ]);
-      expect(materializer.getList(namedNode('http://example.org/l2'))).toEqual([
-        literal('C'),
+      expect(materializer.getList(DF.namedNode('http://example.org/l2'))).toEqual([
+        DF.literal('C'),
       ]);
     });
 
@@ -59,18 +60,18 @@ describe('RdfListMaterializer', () => {
         quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"C"'),
       ]));
       expect(materializer.getRoots()).toEqual([
-        namedNode('http://example.org/l2'),
-        namedNode('http://example.org/l0'),
-        namedNode('http://example.org/l1'),
+        DF.namedNode('http://example.org/l2'),
+        DF.namedNode('http://example.org/l0'),
+        DF.namedNode('http://example.org/l1'),
       ]);
-      expect(materializer.getList(namedNode('http://example.org/l0'))).toEqual([
-        literal('A'), literal('B'), literal('C'),
+      expect(materializer.getList(DF.namedNode('http://example.org/l0'))).toEqual([
+        DF.literal('A'), DF.literal('B'), DF.literal('C'),
       ]);
-      expect(materializer.getList(namedNode('http://example.org/l1'))).toEqual([
-        literal('B'), literal('C'),
+      expect(materializer.getList(DF.namedNode('http://example.org/l1'))).toEqual([
+        DF.literal('B'), DF.literal('C'),
       ]);
-      expect(materializer.getList(namedNode('http://example.org/l2'))).toEqual([
-        literal('C'),
+      expect(materializer.getList(DF.namedNode('http://example.org/l2'))).toEqual([
+        DF.literal('C'),
       ]);
     });
 
@@ -80,7 +81,7 @@ describe('RdfListMaterializer', () => {
         quad('http://example.org/l0', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"A"'),
       ]));
       expect(materializer.getRoots()).toEqual([]);
-      expect(materializer.getList(namedNode('http://example.org/l0'))).toBeFalsy();
+      expect(materializer.getList(DF.namedNode('http://example.org/l0'))).toBeFalsy();
     });
 
   });

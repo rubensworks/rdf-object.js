@@ -1,4 +1,4 @@
-import {blankNode, literal, namedNode, quad as rawQuad} from "@rdfjs/data-model";
+import {DataFactory} from "rdf-data-factory";
 import * as RDF from "rdf-js";
 import {RdfObjectLoader} from "../lib/RdfObjectLoader";
 import {Resource} from "../lib/Resource";
@@ -6,6 +6,7 @@ import {Resource} from "../lib/Resource";
 // tslint:disable:no-var-requires
 const streamifyArray = require('streamify-array');
 const quad = require('rdf-quad');
+const DF = new DataFactory<RDF.BaseQuad>();
 
 describe('RdfObjectLoader', () => {
   describe('an instance without context', () => {
@@ -27,9 +28,9 @@ describe('RdfObjectLoader', () => {
         await loader.import(streamifyArray([
           quad('http://example.org/s', 'http://example.org/p', 'http://example.org/o'),
         ]));
-        const resourceO = loader.getOrMakeResource(namedNode('http://example.org/o'));
-        const resourceP = loader.getOrMakeResource(namedNode('http://example.org/p'));
-        const resourceS = loader.getOrMakeResource(namedNode('http://example.org/s'));
+        const resourceO = loader.getOrMakeResource(DF.namedNode('http://example.org/o'));
+        const resourceP = loader.getOrMakeResource(DF.namedNode('http://example.org/p'));
+        const resourceS = loader.getOrMakeResource(DF.namedNode('http://example.org/s'));
         resourceS.addProperty(resourceP, resourceO);
         expect(loader.resources).toEqual({
           'http://example.org/o': resourceO,
@@ -40,15 +41,15 @@ describe('RdfObjectLoader', () => {
 
       it('should import with one generalized quad', async () => {
         await loader.import(<RDF.Stream<RDF.BaseQuad>> streamifyArray([
-          rawQuad<RDF.BaseQuad>(
-            blankNode('http://example.org/s'),
-            blankNode('http://example.org/p'),
-            blankNode('http://example.org/o'),
+          DF.quad(
+            DF.blankNode('http://example.org/s'),
+            DF.blankNode('http://example.org/p'),
+            DF.blankNode('http://example.org/o'),
           ),
         ]));
-        const resourceO = loader.getOrMakeResource(blankNode('http://example.org/o'));
-        const resourceP = loader.getOrMakeResource(blankNode('http://example.org/p'));
-        const resourceS = loader.getOrMakeResource(blankNode('http://example.org/s'));
+        const resourceO = loader.getOrMakeResource(DF.blankNode('http://example.org/o'));
+        const resourceP = loader.getOrMakeResource(DF.blankNode('http://example.org/p'));
+        const resourceS = loader.getOrMakeResource(DF.blankNode('http://example.org/s'));
         resourceS.addProperty(resourceP, resourceO);
         expect(loader.resources).toEqual({
           '_:http://example.org/o': resourceO,
@@ -62,11 +63,11 @@ describe('RdfObjectLoader', () => {
           quad('http://example.org/a', 'http://example.org/p1', 'http://example.org/b'),
           quad('http://example.org/b', 'http://example.org/p2', 'http://example.org/c'),
         ]));
-        const resourceA = loader.getOrMakeResource(namedNode('http://example.org/a'));
-        const resourceB = loader.getOrMakeResource(namedNode('http://example.org/b'));
-        const resourceC = loader.getOrMakeResource(namedNode('http://example.org/c'));
-        const resourceP1 = loader.getOrMakeResource(namedNode('http://example.org/p1'));
-        const resourceP2 = loader.getOrMakeResource(namedNode('http://example.org/p2'));
+        const resourceA = loader.getOrMakeResource(DF.namedNode('http://example.org/a'));
+        const resourceB = loader.getOrMakeResource(DF.namedNode('http://example.org/b'));
+        const resourceC = loader.getOrMakeResource(DF.namedNode('http://example.org/c'));
+        const resourceP1 = loader.getOrMakeResource(DF.namedNode('http://example.org/p1'));
+        const resourceP2 = loader.getOrMakeResource(DF.namedNode('http://example.org/p2'));
         resourceA.addProperty(resourceP1, resourceB);
         resourceB.addProperty(resourceP2, resourceC);
         expect(loader.resources).toEqual({
@@ -89,9 +90,9 @@ describe('RdfObjectLoader', () => {
           quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
             'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
         ]));
-        const valueA = loader.getOrMakeResource(literal('A'));
-        const valueB = loader.getOrMakeResource(literal('B'));
-        const valueC = loader.getOrMakeResource(literal('C'));
+        const valueA = loader.getOrMakeResource(DF.literal('A'));
+        const valueB = loader.getOrMakeResource(DF.literal('B'));
+        const valueC = loader.getOrMakeResource(DF.literal('C'));
         expect(loader.resources['http://example.org/listResource'].propertiesUri['http://example.org/listPredicate'][0]
           .list).toEqual([ valueA, valueB, valueC ]);
       });
@@ -118,9 +119,9 @@ describe('RdfObjectLoader', () => {
         await loader.import(streamifyArray([
           quad('http://example.org/s', 'http://example.org/p', 'http://example.org/o'),
         ]));
-        const resourceO = loader.getOrMakeResource(namedNode('http://example.org/o'));
-        const resourceP = loader.getOrMakeResource(namedNode('http://example.org/p'));
-        const resourceS = loader.getOrMakeResource(namedNode('http://example.org/s'));
+        const resourceO = loader.getOrMakeResource(DF.namedNode('http://example.org/o'));
+        const resourceP = loader.getOrMakeResource(DF.namedNode('http://example.org/p'));
+        const resourceS = loader.getOrMakeResource(DF.namedNode('http://example.org/s'));
         resourceS.addProperty(resourceP, resourceO);
         expect(loader.resources).toEqual({
           'http://example.org/o': resourceO,
@@ -134,11 +135,11 @@ describe('RdfObjectLoader', () => {
           quad('http://example.org/a', 'http://example.org/p1', 'http://example.org/b'),
           quad('http://example.org/b', 'http://example.org/p2', 'http://example.org/c'),
         ]));
-        const resourceA = loader.getOrMakeResource(namedNode('http://example.org/a'));
-        const resourceB = loader.getOrMakeResource(namedNode('http://example.org/b'));
-        const resourceC = loader.getOrMakeResource(namedNode('http://example.org/c'));
-        const resourceP1 = loader.getOrMakeResource(namedNode('http://example.org/p1'));
-        const resourceP2 = loader.getOrMakeResource(namedNode('http://example.org/p2'));
+        const resourceA = loader.getOrMakeResource(DF.namedNode('http://example.org/a'));
+        const resourceB = loader.getOrMakeResource(DF.namedNode('http://example.org/b'));
+        const resourceC = loader.getOrMakeResource(DF.namedNode('http://example.org/c'));
+        const resourceP1 = loader.getOrMakeResource(DF.namedNode('http://example.org/p1'));
+        const resourceP2 = loader.getOrMakeResource(DF.namedNode('http://example.org/p2'));
         resourceA.addProperty(resourceP1, resourceB);
         resourceB.addProperty(resourceP2, resourceC);
         expect(loader.resources).toEqual({
@@ -193,11 +194,11 @@ describe('RdfObjectLoader', () => {
         await loader.importArray([
           quad('http://example.org/s', 'http://example.org/p', 'http://example.org/o'),
         ]);
-        const resourceO = loader.getOrMakeResource(namedNode('http://example.org/o'));
-        const resourceP = loader.getOrMakeResource(namedNode('http://example.org/p'));
-        const resourceS = loader.getOrMakeResource(namedNode('http://example.org/s'));
+        const resourceO = loader.getOrMakeResource(DF.namedNode('http://example.org/o'));
+        const resourceP = loader.getOrMakeResource(DF.namedNode('http://example.org/p'));
+        const resourceS = loader.getOrMakeResource(DF.namedNode('http://example.org/s'));
         resourceS.addProperty(resourceP, resourceO);
-        resourceS.addProperty(new Resource({ term: namedNode('myP') }), resourceO);
+        resourceS.addProperty(new Resource({ term: DF.namedNode('myP') }), resourceO);
         expect(loader.resources).toEqual({
           'http://example.org/o': resourceO,
           'http://example.org/p': resourceP,
@@ -210,15 +211,15 @@ describe('RdfObjectLoader', () => {
           quad('http://example.org/a', 'http://example.org/p1', 'http://example.org/b'),
           quad('http://example.org/b', 'http://example.org/p2', 'http://example.org/c'),
         ]);
-        const resourceA = loader.getOrMakeResource(namedNode('http://example.org/a'));
-        const resourceB = loader.getOrMakeResource(namedNode('http://example.org/b'));
-        const resourceC = loader.getOrMakeResource(namedNode('http://example.org/c'));
-        const resourceP1 = loader.getOrMakeResource(namedNode('http://example.org/p1'));
-        const resourceP2 = loader.getOrMakeResource(namedNode('http://example.org/p2'));
+        const resourceA = loader.getOrMakeResource(DF.namedNode('http://example.org/a'));
+        const resourceB = loader.getOrMakeResource(DF.namedNode('http://example.org/b'));
+        const resourceC = loader.getOrMakeResource(DF.namedNode('http://example.org/c'));
+        const resourceP1 = loader.getOrMakeResource(DF.namedNode('http://example.org/p1'));
+        const resourceP2 = loader.getOrMakeResource(DF.namedNode('http://example.org/p2'));
         resourceA.addProperty(resourceP1, resourceB);
-        resourceA.addProperty(new Resource({ term: namedNode('myP1') }), resourceB);
+        resourceA.addProperty(new Resource({ term: DF.namedNode('myP1') }), resourceB);
         resourceB.addProperty(resourceP2, resourceC);
-        resourceB.addProperty(new Resource({ term: namedNode('myP2') }), resourceC);
+        resourceB.addProperty(new Resource({ term: DF.namedNode('myP2') }), resourceC);
         expect(loader.resources).toEqual({
           'http://example.org/a': resourceA,
           'http://example.org/b': resourceB,
