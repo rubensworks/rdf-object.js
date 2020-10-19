@@ -1,7 +1,7 @@
-import {DataFactory} from "rdf-data-factory";
-import * as RDF from "rdf-js";
-import {Resource} from "../lib/Resource";
-import {JsonLdContextNormalized} from "jsonld-context-parser";
+import { JsonLdContextNormalized } from 'jsonld-context-parser';
+import { DataFactory } from 'rdf-data-factory';
+import type * as RDF from 'rdf-js';
+import { Resource } from '../lib/Resource';
 
 const context = new JsonLdContextNormalized({
   ex: 'http://example.org/',
@@ -86,7 +86,7 @@ describe('Resource', () => {
     });
 
     it('should have 1 predicate', () => {
-      return expect(resource.predicates).toEqual([predicate]);
+      return expect(resource.predicates).toEqual([ predicate ]);
     });
 
     it('should have no properties by URI', () => {

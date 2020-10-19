@@ -1,6 +1,6 @@
-import {DataFactory} from "rdf-data-factory";
-import * as RDF from "rdf-js";
-import {stringToTerm, termToString} from "rdf-string";
+import { DataFactory } from 'rdf-data-factory';
+import type * as RDF from 'rdf-js';
+import { stringToTerm, termToString } from 'rdf-string';
 
 const DF = new DataFactory();
 
@@ -8,24 +8,23 @@ const DF = new DataFactory();
  * A helper class for converting RDF lists to JavaScript RDF term term lists
  */
 export class RdfListMaterializer {
-
   private static readonly RDF_FIRST: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first');
   private static readonly RDF_REST: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest');
   private static readonly RDF_NIL: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil');
 
-  private readonly chains: {[id: string]: { first: RDF.Term, rest: RDF.Term }} = {};
+  private readonly chains: Record<string, { first: RDF.Term; rest: RDF.Term }> = {};
 
-  protected static addChain(chains: {[id: string]: { first: RDF.Term, rest: RDF.Term }}, subject: RDF.Term,
-                            object: RDF.Term, type: 'first' | 'rest') {
+  protected static addChain(chains: Record<string, { first: RDF.Term; rest: RDF.Term }>, subject: RDF.Term,
+    object: RDF.Term, type: 'first' | 'rest'): void {
     const hash: string = termToString(subject);
     if (!chains[hash]) {
-      chains[hash] = <{ first: RDF.Term, rest: RDF.Term }> {};
+      chains[hash] = <{ first: RDF.Term; rest: RDF.Term }> {};
     }
     chains[hash][type] = object;
   }
 
-  protected static materializeChain(root: RDF.Term, chains: {[id: string]: { first: RDF.Term, rest: RDF.Term }},
-                                    array?: RDF.Term[]): RDF.Term[] {
+  protected static materializeChain(root: RDF.Term, chains: Record<string, { first: RDF.Term; rest: RDF.Term }>,
+    array?: RDF.Term[]): RDF.Term[] | undefined {
     if (!array) {
       array = [];
     }
@@ -36,11 +35,8 @@ export class RdfListMaterializer {
       array.push(chain.first);
       if (!chain.rest.equals(RdfListMaterializer.RDF_NIL)) {
         return RdfListMaterializer.materializeChain(chain.rest, chains, array);
-      } else {
-        return array;
       }
-    } else {
-      return null;
+      return array;
     }
   }
 
@@ -67,9 +63,9 @@ export class RdfListMaterializer {
   /**
    * Get the list identified by the given starting term.
    * @param {Term} root A root RDF term that identifies an RDF list.
-   * @return {Term[]} A list of terms, or null if the given root is not a list.
+   * @return {Term[]} A list of terms, or undefined if the given root is not a list.
    */
-  public getList(root: RDF.Term): RDF.Term[] {
+  public getList(root: RDF.Term): RDF.Term[] | undefined {
     return RdfListMaterializer.materializeChain(root, this.chains);
   }
 
@@ -78,8 +74,7 @@ export class RdfListMaterializer {
    */
   public getRoots(): RDF.Term[] {
     return Object.keys(this.chains)
-      .filter((key) => this.chains[key].first && this.chains[key].rest)
-      .map((key) => stringToTerm(key));
+      .filter(key => this.chains[key].first && this.chains[key].rest)
+      .map(key => stringToTerm(key));
   }
-
 }

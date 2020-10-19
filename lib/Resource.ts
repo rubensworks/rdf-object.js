@@ -1,28 +1,28 @@
-import {JsonLdContextNormalized} from "jsonld-context-parser";
-import * as RDF from "rdf-js";
-import {termToString} from "rdf-string";
-import {ShortcutPropertyHandler} from "./ShortcutPropertyHandler";
-import {SingularPropertyHandler} from "./SingularPropertyHandler";
+import { JsonLdContextNormalized } from 'jsonld-context-parser';
+import type * as RDF from 'rdf-js';
+import { termToString } from 'rdf-string';
+import { ShortcutPropertyHandler } from './ShortcutPropertyHandler';
+import { SingularPropertyHandler } from './SingularPropertyHandler';
 
 /**
  * A resource is identified by a URI and has property links to other resources.
  */
 export class Resource {
-
   public readonly term: RDF.Term;
   public readonly predicates: Resource[];
-  public readonly propertiesUri: {[predicate: string]: Resource[]};
-  public readonly properties: {[shortcut: string]: Resource[]};
-  public readonly property: {[shortcut: string]: Resource};
-  public list: Resource[];
+  public readonly propertiesUri: Record<string, Resource[]>;
+  public readonly properties: Record<string, Resource[]>;
+  public readonly property: Record<string, Resource>;
+  public list: Resource[] | undefined;
 
-  constructor(args: IResourceArgs) {
+  public constructor(args: IResourceArgs) {
     this.term = args.term;
 
     this.predicates = [];
     this.propertiesUri = {};
     this.properties = new Proxy(this.propertiesUri, new ShortcutPropertyHandler(
-      args.context || new JsonLdContextNormalized({})));
+      args.context || new JsonLdContextNormalized({}),
+    ));
     this.property = <any> new Proxy(this.properties, new SingularPropertyHandler());
   }
 
@@ -30,14 +30,14 @@ export class Resource {
    * Get the term type of this resource.
    * @return {"NamedNode" | "BlankNode" | "Literal" | "Variable" | "DefaultGraph"}
    */
-  get type() {
+  public get type(): string {
     return this.term.termType;
   }
 
   /**
    * @return {string} The URI, blank node label, literal value or variable name of this resource.
    */
-  get value() {
+  public get value(): string {
     return this.term.value;
   }
 
@@ -67,7 +67,7 @@ export class Resource {
    * @param {Resource} predicate Predicate resource of the property link.
    * @param {Resource} object Object resource of the property link.
    */
-  public addProperty(predicate: Resource, object: Resource) {
+  public addProperty(predicate: Resource, object: Resource): void {
     const propertyUri: string = termToString(predicate.term);
     let properties: Resource[] = this.propertiesUri[propertyUri];
     if (!properties) {
@@ -83,7 +83,6 @@ export class Resource {
   public toString(): string {
     return this.value;
   }
-
 }
 
 export interface IResourceArgs {

@@ -1,12 +1,12 @@
-import {SingularPropertyHandler} from "../lib/SingularPropertyHandler";
+import { SingularPropertyHandler } from '../lib/SingularPropertyHandler';
 
 describe('SingularPropertyHandler', () => {
   describe('constructed', () => {
     const handler = new SingularPropertyHandler();
     const raw: any = {
       none: [],
-      one: ['a'],
-      two: ['a', 'b'],
+      one: [ 'a' ],
+      two: [ 'a', 'b' ],
     };
     const object = new Proxy(raw, handler);
 
@@ -47,12 +47,12 @@ describe('SingularPropertyHandler', () => {
     });
 
     it('proxy should allow a property to be set', () => {
-      (<any> object).three = 'b';
-      expect((<any> raw).three).toEqual(['b']);
+      (object).three = 'b';
+      expect((raw).three).toEqual([ 'b' ]);
     });
 
     it('proxy own all keys with values that have an array of size at least 1', () => {
-      expect(Object.keys(object)).toEqual(['one', 'two', 'three']);
+      expect(Object.keys(object)).toEqual([ 'one', 'two', 'three' ]);
     });
   });
 });

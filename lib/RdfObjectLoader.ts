@@ -1,29 +1,30 @@
-import {ContextParser, JsonLdContextNormalized, JsonLdContext} from "jsonld-context-parser";
-import * as RDF from "rdf-js";
-import {termToString} from "rdf-string";
-import {RdfListMaterializer} from "./RdfListMaterializer";
-import {Resource} from "./Resource";
+import type { JsonLdContextNormalized, JsonLdContext } from 'jsonld-context-parser';
+import { ContextParser } from 'jsonld-context-parser';
+import type * as RDF from 'rdf-js';
+import { termToString } from 'rdf-string';
+import { RdfListMaterializer } from './RdfListMaterializer';
+import { Resource } from './Resource';
 
 /**
  * Take a stream or array of RDF quads and loads them as linked resources.
  */
 export class RdfObjectLoader {
-
   public readonly normalizeLists: boolean;
-  public readonly context: Promise<JsonLdContextNormalized>;
-  public readonly resources: { [term: string]: Resource } = {};
-  private contextResolved: JsonLdContextNormalized;
+  public readonly context: Promise<void>;
+  public readonly resources: Record<string, Resource> = {};
+  private contextResolved!: JsonLdContextNormalized;
+  private contextError: Error | undefined;
 
-  constructor(args?: IRdfClassLoaderArgs) {
-    if (args) {
-      Object.assign(this, args);
-    }
+  public constructor(args?: IRdfClassLoaderArgs) {
+    this.normalizeLists = !args || !('normalizeLists' in args) || Boolean(args.normalizeLists);
 
-    if (this.normalizeLists !== false) {
-      this.normalizeLists = true;
-    }
-    this.context = new ContextParser().parse(this.context || {});
-    this.context.then((contextResolved) => this.contextResolved = contextResolved);
+    this.context = new ContextParser().parse(args && args.context || {})
+      .then(contextResolved => {
+        this.contextResolved = contextResolved;
+      }).catch(error => {
+        // Save our error so that we can optionally throw it in .import
+        this.contextError = error;
+      });
   }
 
   /**
@@ -49,13 +50,16 @@ export class RdfObjectLoader {
    * @return {Promise<void>} A promise that resolves when the stream has ended.
    * @template Q The type of quad, defaults to RDF.Quad.
    */
-  public import<Q extends RDF.BaseQuad = RDF.Quad>(stream: RDF.Stream<Q>): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      await this.context;
-      const listMaterializer = new RdfListMaterializer();
-      if (this.normalizeLists) {
-        listMaterializer.import(stream);
-      }
+  public async import<Q extends RDF.BaseQuad = RDF.Quad>(stream: RDF.Stream<Q>): Promise<void> {
+    await this.context;
+    const listMaterializer = new RdfListMaterializer();
+    let listMaterializerPromise;
+    if (this.normalizeLists) {
+      listMaterializerPromise = listMaterializer.import(stream);
+    }
+
+    // Wait until stream has been handled completely
+    await new Promise((resolve, reject) => {
       stream.on('data', (quad: Q) => {
         const subject: Resource = this.getOrMakeResource(quad.subject);
         const predicate: Resource = this.getOrMakeResource(quad.predicate);
@@ -66,13 +70,19 @@ export class RdfObjectLoader {
       stream.on('end', () => {
         if (this.normalizeLists) {
           for (const listRoot of listMaterializer.getRoots()) {
-            const listTerms = listMaterializer.getList(listRoot);
-            this.resources[termToString(listRoot)].list = listTerms.map((term) => this.resources[termToString(term)]);
+            const listTerms = <RDF.Term[]> listMaterializer.getList(listRoot);
+            this.resources[termToString(listRoot)].list = listTerms.map(term => this.resources[termToString(term)]);
           }
         }
         resolve();
       });
     });
+
+    // Catches errors from list materialization
+    await listMaterializerPromise;
+    if (this.contextError) {
+      throw this.contextError;
+    }
   }
 
   /**
@@ -88,6 +98,13 @@ export class RdfObjectLoader {
 }
 
 export interface IRdfClassLoaderArgs {
+  /**
+   * If RDF lists should be loaded into the Resource.list field.
+   * Defaults to true.
+   */
   normalizeLists?: boolean;
+  /**
+   * The JSON-LD context to use for expanding and compacting.
+   */
   context?: JsonLdContext;
 }

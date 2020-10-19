@@ -1,16 +1,14 @@
-import {DataFactory} from "rdf-data-factory";
-import * as RDF from "rdf-js";
-import {RdfObjectLoader} from "../lib/RdfObjectLoader";
-import {Resource} from "../lib/Resource";
+import { DataFactory } from 'rdf-data-factory';
+import type * as RDF from 'rdf-js';
+import { RdfObjectLoader } from '../lib/RdfObjectLoader';
+import { Resource } from '../lib/Resource';
 
-// tslint:disable:no-var-requires
-const streamifyArray = require('streamify-array');
 const quad = require('rdf-quad');
+const streamifyArray = require('streamify-array');
 const DF = new DataFactory<RDF.BaseQuad>();
 
 describe('RdfObjectLoader', () => {
   describe('an instance without context', () => {
-
     let loader: RdfObjectLoader;
 
     beforeEach(() => {
@@ -18,13 +16,12 @@ describe('RdfObjectLoader', () => {
     });
 
     describe('import', () => {
-
-      it('should import an empty stream', async () => {
+      it('should import an empty stream', async() => {
         await loader.import(streamifyArray([]));
         expect(loader.resources).toEqual({});
       });
 
-      it('should import with one quad', async () => {
+      it('should import with one quad', async() => {
         await loader.import(streamifyArray([
           quad('http://example.org/s', 'http://example.org/p', 'http://example.org/o'),
         ]));
@@ -39,7 +36,7 @@ describe('RdfObjectLoader', () => {
         });
       });
 
-      it('should import with one generalized quad', async () => {
+      it('should import with one generalized quad', async() => {
         await loader.import(<RDF.Stream<RDF.BaseQuad>> streamifyArray([
           DF.quad(
             DF.blankNode('http://example.org/s'),
@@ -58,7 +55,7 @@ describe('RdfObjectLoader', () => {
         });
       });
 
-      it('should import with two linked quads', async () => {
+      it('should import with two linked quads', async() => {
         await loader.import(streamifyArray([
           quad('http://example.org/a', 'http://example.org/p1', 'http://example.org/b'),
           quad('http://example.org/b', 'http://example.org/p2', 'http://example.org/c'),
@@ -79,7 +76,7 @@ describe('RdfObjectLoader', () => {
         });
       });
 
-      it('should normalize a list', async () => {
+      it('should normalize a list', async() => {
         await loader.import(streamifyArray([
           quad('http://example.org/listResource', 'http://example.org/listPredicate', 'http://example.org/l0'),
           quad('http://example.org/l0', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"A"'),
@@ -87,7 +84,8 @@ describe('RdfObjectLoader', () => {
           quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"B"'),
           quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l2'),
           quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"C"'),
-          quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
+          quad('http://example.org/l2',
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
             'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
         ]));
         const valueA = loader.getOrMakeResource(DF.literal('A'));
@@ -96,12 +94,10 @@ describe('RdfObjectLoader', () => {
         expect(loader.resources['http://example.org/listResource'].propertiesUri['http://example.org/listPredicate'][0]
           .list).toEqual([ valueA, valueB, valueC ]);
       });
-
     });
   });
 
   describe('an instance without context and without list normalization', () => {
-
     let loader: RdfObjectLoader;
 
     beforeEach(() => {
@@ -109,13 +105,12 @@ describe('RdfObjectLoader', () => {
     });
 
     describe('import', () => {
-
-      it('should import an empty stream', async () => {
+      it('should import an empty stream', async() => {
         await loader.import(streamifyArray([]));
         expect(loader.resources).toEqual({});
       });
 
-      it('should import with one quad', async () => {
+      it('should import with one quad', async() => {
         await loader.import(streamifyArray([
           quad('http://example.org/s', 'http://example.org/p', 'http://example.org/o'),
         ]));
@@ -130,7 +125,7 @@ describe('RdfObjectLoader', () => {
         });
       });
 
-      it('should import with two linked quads', async () => {
+      it('should import with two linked quads', async() => {
         await loader.import(streamifyArray([
           quad('http://example.org/a', 'http://example.org/p1', 'http://example.org/b'),
           quad('http://example.org/b', 'http://example.org/p2', 'http://example.org/c'),
@@ -151,7 +146,7 @@ describe('RdfObjectLoader', () => {
         });
       });
 
-      it('should not normalize a list', async () => {
+      it('should not normalize a list', async() => {
         await loader.import(streamifyArray([
           quad('http://example.org/listResource', 'http://example.org/listPredicate', 'http://example.org/l0'),
           quad('http://example.org/l0', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"A"'),
@@ -159,18 +154,17 @@ describe('RdfObjectLoader', () => {
           quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"B"'),
           quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l2'),
           quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"C"'),
-          quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
+          quad('http://example.org/l2',
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
             'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
         ]));
         expect(loader.resources['http://example.org/listResource'].propertiesUri['http://example.org/listPredicate'][0]
           .list).toBeFalsy();
       });
-
     });
   });
 
   describe('an instance with context', () => {
-
     let context;
     let loader: RdfObjectLoader;
 
@@ -184,13 +178,12 @@ describe('RdfObjectLoader', () => {
     });
 
     describe('import', () => {
-
-      it('should import an empty stream in an array', async () => {
+      it('should import an empty stream in an array', async() => {
         await loader.importArray([]);
         expect(loader.resources).toEqual({});
       });
 
-      it('should import with one quad in an array', async () => {
+      it('should import with one quad in an array', async() => {
         await loader.importArray([
           quad('http://example.org/s', 'http://example.org/p', 'http://example.org/o'),
         ]);
@@ -206,7 +199,7 @@ describe('RdfObjectLoader', () => {
         });
       });
 
-      it('should import with two linked quads in an array', async () => {
+      it('should import with two linked quads in an array', async() => {
         await loader.importArray([
           quad('http://example.org/a', 'http://example.org/p1', 'http://example.org/b'),
           quad('http://example.org/b', 'http://example.org/p2', 'http://example.org/c'),
@@ -228,7 +221,23 @@ describe('RdfObjectLoader', () => {
           'http://example.org/p2': resourceP2,
         });
       });
+    });
+  });
 
+  describe('an instance with erroring context', () => {
+    let context: any;
+    let loader: RdfObjectLoader;
+
+    beforeEach(() => {
+      context = 123;
+      loader = new RdfObjectLoader({ context });
+    });
+
+    describe('import', () => {
+      it('should fail on first call', async() => {
+        await expect(loader.importArray([])).rejects
+          .toThrow(new Error('Tried parsing a context that is not a string, array or object, but got 123'));
+      });
     });
   });
 });

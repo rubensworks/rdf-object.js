@@ -1,38 +1,41 @@
-import {JsonLdContextNormalized} from "jsonld-context-parser";
+import type { JsonLdContextNormalized } from 'jsonld-context-parser';
 
 /**
  * A proxy handler for exposing a URI-to-? map to shortcut-to-? map
  * based on a JSON-LD context.
  */
-export class ShortcutPropertyHandler<T> implements ProxyHandler<{[predicate: string]: T[]}> {
-
+export class ShortcutPropertyHandler<T> implements ProxyHandler<Record<string, T[]>> {
   private readonly context: JsonLdContextNormalized;
 
-  constructor(context: JsonLdContextNormalized) {
+  public constructor(context: JsonLdContextNormalized) {
     this.context = context;
   }
 
-  public has(target: {[predicate: string]: T[]}, p: PropertyKey): boolean {
-    return this.get(target, p).length > 0;
+  public has(target: Record<string, T[]>, propertyKey: PropertyKey): boolean {
+    return this.get(target, propertyKey).length > 0;
   }
 
-  public get(target: {[predicate: string]: T[]}, p: PropertyKey): T[] {
-    return target[this.context.expandTerm(this.toTermString(p), true)] || [];
+  public get(target: Record<string, T[]>, propertyKey: PropertyKey): T[] {
+    const iri = this.context.expandTerm(this.toTermString(propertyKey), true);
+    return iri && target[iri] || [];
   }
 
-  public set(target: {[predicate: string]: T[]}, p: PropertyKey, value: any): boolean {
-    target[this.context.expandTerm(this.toTermString(p), true)] = value;
+  public set(target: Record<string, T[]>, propertyKey: PropertyKey, value: any): boolean {
+    const iri = this.context.expandTerm(this.toTermString(propertyKey), true);
+    if (!iri) {
+      throw new Error(`Illegal property setting for disabled context key '${this.toTermString(propertyKey)}'`);
+    }
+    target[iri] = value;
     return true;
   }
 
-  public ownKeys(target: {[predicate: string]: T[]}): PropertyKey[] {
-    return Object.keys(target)
+  public ownKeys(target: Record<string, T[]>): PropertyKey[] {
+    return <string[]> Object.keys(target)
       .map((key: string) => this.context.expandTerm(key, true))
-      .filter((key) => this.has(target, key));
+      .filter(key => key && this.has(target, key));
   }
 
-  private toTermString(p: PropertyKey) {
-    return typeof p === 'string' ? p : String(p);
+  private toTermString(propertyKey: PropertyKey): string {
+    return typeof propertyKey === 'string' ? propertyKey : String(propertyKey);
   }
-
 }

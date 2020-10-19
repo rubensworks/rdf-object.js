@@ -3,24 +3,22 @@
  * as hashes with singular values.
  * This proxy will always take the first element of array values.
  */
-export class SingularPropertyHandler<T> implements ProxyHandler<{[predicate: string]: T[]}> {
-
-  public has(target: {[predicate: string]: T[]}, p: PropertyKey): boolean {
-    return !!this.get(target, p);
+export class SingularPropertyHandler<T> implements ProxyHandler<Record<string, T[]>> {
+  public has(target: Record<string, T[]>, propertyKey: PropertyKey): boolean {
+    return !!this.get(target, propertyKey);
   }
 
-  public get(target: {[predicate: string]: T[]}, p: PropertyKey): T {
-    const value = target[<string> p];
-    return value && value.length > 0 ? value[0] : null;
+  public get(target: Record<string, T[]>, propertyKey: PropertyKey): T | undefined {
+    const value = target[<string> propertyKey];
+    return value && value.length > 0 ? value[0] : undefined;
   }
 
-  public set(target: {[predicate: string]: T[]}, p: PropertyKey, value: any): boolean {
-    target[<string> p] = [value];
+  public set(target: Record<string, T[]>, propertyKey: PropertyKey, value: any): boolean {
+    target[<string> propertyKey] = [ value ];
     return true;
   }
 
-  public ownKeys(target: {[predicate: string]: T[]}): PropertyKey[] {
-    return Object.keys(target).filter((key) => this.has(target, key));
+  public ownKeys(target: Record<string, T[]>): PropertyKey[] {
+    return Object.keys(target).filter(key => this.has(target, key));
   }
-
 }

@@ -31,10 +31,20 @@
     "test"
   ],
   "devDependencies": {
+    "@rubensworks/eslint-config": "^1.0.0",
     "@types/jest": "^26.0.0",
     "@types/n3": "^1.4.4",
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/parser": "^4.4.1",
     "arrayify-stream": "^1.0.0",
     "coveralls": "^3.0.0",
+    "eslint": "^7.11.0",
+    "eslint-config-es": "^3.24.6",
+    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.0",
+    "eslint-plugin-tsdoc": "^0.2.7",
+    "eslint-plugin-unused-imports": "^0.1.3",
     "jest": "^26.0.0",
     "jest-rdf": "^1.6.0",
     "manual-git-changelog": "^1.0.1",
@@ -43,8 +53,6 @@
     "rdf-quad": "^1.5.0",
     "streamify-string": "^1.0.1",
     "ts-jest": "^26.0.0",
-    "tslint": "^6.0.0",
-    "tslint-eslint-rules": "^5.3.1",
     "typescript": "^3.0.1"
   },
   "jest": {
@@ -63,13 +71,21 @@
       "js"
     ],
     "collectCoverage": true,
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   },
   "scripts": {
     "test": "jest ${1}",
     "test-watch": "jest ${1} --watch",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
-    "lint": "tslint index.ts lib/**/*.ts test/**/*.ts --exclude '**/*.d.ts'",
+    "lint": "eslint . --ext .ts --cache",
     "build": "tsc",
     "validate": "npm ls",
     "prepare": "npm run build",
