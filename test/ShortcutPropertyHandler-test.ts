@@ -119,6 +119,11 @@ describe('ShortcutPropertyHandler', () => {
       expect((raw)['http://example.org/one']).toEqual([ 'a', 'b', 'c' ]);
     });
 
+    it('proxy should fail when getting a disabled key', () => {
+      expect(() => (object).disabled)
+        .toThrow(new Error('Illegal property getting for disabled context key \'disabled\''));
+    });
+
     it('proxy should fail when setting a disabled key', () => {
       expect(() => (object).disabled = [ 'a', 'b', 'c' ])
         .toThrow(new Error('Illegal property setting for disabled context key \'disabled\''));

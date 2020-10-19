@@ -147,6 +147,20 @@ myLoader.importArray([
 The raw properties (without JSON-LD shortcuts) are
 available in the `propertiesUri` field on `Resource`.
 
+### Set properties by shortcut
+
+The `property` and `properties` field can also be used to _set_ new values on a resource.
+
+For example:
+```javascript
+// Sets a single property value
+myResource.property['rdfs:label'] = new Resource({ term: literal('Name') });
+
+// Sets multiple property values
+myResource.properties['rdfs:label'].push(new Resource({ term: literal('Name 1') }));
+myResource.properties['rdfs:label'].push(new Resource({ term: literal('Name 2') }));
+```
+
 ### Resources are nested
 
 As `Resource` properties map to other `Resource`s,

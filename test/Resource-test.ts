@@ -53,6 +53,33 @@ describe('Resource', () => {
     it('should have no properties by single value', () => {
       return expect(resource.property).toEqual({});
     });
+
+    describe('property', () => {
+      it('should allow a property to be added', () => {
+        resource.property['ex:a'] = new Resource({ term: DF.literal('value') });
+        expect(resource.property['ex:a'].term).toEqual(DF.literal('value'));
+      });
+
+      it('should allow property to be overridden', () => {
+        resource.property['ex:a'] = new Resource({ term: DF.literal('value1') });
+        resource.property['ex:a'] = new Resource({ term: DF.literal('value2') });
+        expect(resource.property['ex:a'].term).toEqual(DF.literal('value2'));
+      });
+    });
+
+    describe('properties', () => {
+      it('should allow a property to be added', () => {
+        resource.properties['ex:a'].push(new Resource({ term: DF.literal('value') }));
+        expect(resource.properties['ex:a'][0].term).toEqual(DF.literal('value'));
+      });
+
+      it('should allow property to be overridden', () => {
+        resource.properties['ex:a'].push(new Resource({ term: DF.literal('value1') }));
+        resource.properties['ex:a'].push(new Resource({ term: DF.literal('value2') }));
+        expect(resource.properties['ex:a'][0].term).toEqual(DF.literal('value1'));
+        expect(resource.properties['ex:a'][1].term).toEqual(DF.literal('value2'));
+      });
+    });
   });
 
   describe('constructed with a named node and a property', () => {

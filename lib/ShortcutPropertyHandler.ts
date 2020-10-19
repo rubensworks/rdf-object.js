@@ -17,7 +17,13 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<Record<string, T
 
   public get(target: Record<string, T[]>, propertyKey: PropertyKey): T[] {
     const iri = this.context.expandTerm(this.toTermString(propertyKey), true);
-    return iri && target[iri] || [];
+    if (!iri) {
+      throw new Error(`Illegal property getting for disabled context key '${this.toTermString(propertyKey)}'`);
+    }
+    if (!(iri in target)) {
+      target[iri] = [];
+    }
+    return target[iri];
   }
 
   public set(target: Record<string, T[]>, propertyKey: PropertyKey, value: any): boolean {
