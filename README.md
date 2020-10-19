@@ -213,6 +213,21 @@ myLoader.importArray([
 If you don't want RDF lists to be parsed automatically,
 you can set `normalizeLists` to `false` in the `RdfObjectLoader` constructor.
 
+### Conveniently construct Resources
+
+If you want to create custom Resources yourself, for example during testing,
+then you can create them for any given term:
+
+```javascript
+new Resource({ term: namedNode('ex:myResource') });
+```
+
+Alternatively, you can use the following convenience constructors to quickly create Resources for a NamedNode or Literal:
+```javascript
+Resource.ofIri('ex:myResource'); // === new Resource({ term: namedNode('ex:myResource') })
+Resource.ofString('abc'); // === new Resource({ term: literal('abc') })
+```
+
 ## License
 This software is written by [Ruben Taelman](http://rubensworks.net/).
 

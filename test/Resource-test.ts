@@ -172,4 +172,18 @@ describe('Resource', () => {
       return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
     });
   });
+
+  describe('static constructors', () => {
+    describe('ofString', () => {
+      it('should produce a Resource with literal term', () => {
+        return expect(Resource.ofString('abc').term).toEqual(DF.literal('abc'));
+      });
+    });
+
+    describe('ofIri', () => {
+      it('should produce a Resource with named node term', () => {
+        return expect(Resource.ofIri('ex:abc').term).toEqual(DF.namedNode('ex:abc'));
+      });
+    });
+  });
 });
