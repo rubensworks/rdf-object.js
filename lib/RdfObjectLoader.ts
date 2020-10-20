@@ -1,7 +1,8 @@
 import type { JsonLdContextNormalized, JsonLdContext } from 'jsonld-context-parser';
 import { ContextParser } from 'jsonld-context-parser';
+import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
-import { termToString } from 'rdf-string';
+import { stringToTerm, termToString } from 'rdf-string';
 import { RdfListMaterializer } from './RdfListMaterializer';
 import { Resource } from './Resource';
 
@@ -9,6 +10,7 @@ import { Resource } from './Resource';
  * Take a stream or array of RDF quads and loads them as linked resources.
  */
 export class RdfObjectLoader {
+  private readonly dataFactory: RDF.DataFactory;
   public readonly normalizeLists: boolean;
   public readonly context: Promise<void>;
   public readonly resources: Record<string, Resource> = {};
@@ -16,6 +18,7 @@ export class RdfObjectLoader {
   private contextError: Error | undefined;
 
   public constructor(args?: IRdfClassLoaderArgs) {
+    this.dataFactory = args?.dataFactory || new DataFactory();
     this.normalizeLists = !args || !('normalizeLists' in args) || Boolean(args.normalizeLists);
 
     this.context = new ContextParser().parse(args && args.context || {})
@@ -39,6 +42,57 @@ export class RdfObjectLoader {
     if (!resource) {
       resource = new Resource({ term, context: this.contextResolved });
       this.resources[termString] = resource;
+    }
+    return resource;
+  }
+
+  /**
+   * Create a resource for the given hash,
+   * where all fields in the given hash are considered to be compacted properties that will be appended.
+   *
+   * Special field cases:
+   * * '@id' represents the IRI identifier.
+   * * 'list' is considered an RDF list.
+   *
+   * Values can be nested hashes, for which other Resources will be created.
+   * String values will be converted into term sources following the semantics of rdf-string.js.
+   * Values can also be Resources.
+   *
+   * @param hash A hash containing compacted properties.
+   */
+  public createCompactedResource(hash: any): Resource {
+    // Create resource for string value
+    if (typeof hash !== 'object') {
+      return this.getOrMakeResource(stringToTerm(hash, this.dataFactory));
+    }
+
+    // Return resource as-is
+    if (hash instanceof Resource) {
+      return hash;
+    }
+
+    // Create resource for named node term by @id value, or blank node
+    const resource: Resource = this.getOrMakeResource(hash['@id'] ?
+      this.dataFactory.namedNode(hash['@id']) :
+      this.dataFactory.blankNode());
+
+    // Iterate over all entries in the hash
+    for (const [ key, value ] of Object.entries(hash)) {
+      // Skip keys starting with '@'
+      if (!key.startsWith('@')) {
+        if (key === 'list') {
+          // Handle RDF list entries
+          resource.list = [];
+          for (const subValue of Array.isArray(value) ? value : [ value ]) {
+            resource.list.push(this.createCompactedResource(subValue));
+          }
+        } else {
+          // Handle compacted properties
+          for (const subValue of Array.isArray(value) ? value : [ value ]) {
+            resource.properties[key].push(this.createCompactedResource(subValue));
+          }
+        }
+      }
     }
     return resource;
   }
@@ -107,4 +161,8 @@ export interface IRdfClassLoaderArgs {
    * The JSON-LD context to use for expanding and compacting.
    */
   context?: JsonLdContext;
+  /**
+   * The factory to create RDF terms and quads with.
+   */
+  dataFactory?: RDF.DataFactory;
 }

@@ -2,6 +2,7 @@ import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { RdfObjectLoader } from '../lib/RdfObjectLoader';
 import { Resource } from '../lib/Resource';
+import 'jest-rdf';
 
 const quad = require('rdf-quad');
 const streamifyArray = require('streamify-array');
@@ -220,6 +221,65 @@ describe('RdfObjectLoader', () => {
           'http://example.org/p1': resourceP1,
           'http://example.org/p2': resourceP2,
         });
+      });
+    });
+
+    describe('createCompactedResource', () => {
+      it('should handle string values', async() => {
+        expect(loader.createCompactedResource('"abc"').term).toEqualRdfTerm(DF.literal('abc'));
+      });
+
+      it('should handle resource values', async() => {
+        const resource = new Resource({ term: DF.blankNode() });
+        expect(loader.createCompactedResource(resource)).toBe(resource);
+      });
+
+      it('should handle an empty hash', async() => {
+        expect(loader.createCompactedResource({}).term).toEqualRdfTerm(DF.blankNode());
+      });
+
+      it('should handle a hash with @id', async() => {
+        expect(loader.createCompactedResource({
+          '@id': 'http://example.org/id',
+        }).term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
+      });
+
+      it('should handle a hash with list', async() => {
+        const resource = loader.createCompactedResource({
+          list: [
+            '"a"',
+            '"b"',
+          ],
+        });
+        expect(resource.list).toBeTruthy();
+        expect(resource.list?.length).toBe(2);
+        expect(resource.list![0].term).toEqualRdfTerm(DF.literal('a'));
+        expect(resource.list![1].term).toEqualRdfTerm(DF.literal('b'));
+      });
+
+      it('should handle a hash with singular list', async() => {
+        const resource = loader.createCompactedResource({
+          list: '"a"',
+        });
+        expect(resource.list).toBeTruthy();
+        expect(resource.list?.length).toBe(1);
+        expect(resource.list![0].term).toEqualRdfTerm(DF.literal('a'));
+      });
+
+      it('should handle a hash with a property array', async() => {
+        const resource = loader.createCompactedResource({
+          prop: [ '"a"', '"b"' ],
+        });
+        expect(resource.property.prop.term).toEqualRdfTerm(DF.literal('a'));
+        expect(resource.properties.prop[0].term).toEqualRdfTerm(DF.literal('a'));
+        expect(resource.properties.prop[1].term).toEqualRdfTerm(DF.literal('b'));
+      });
+
+      it('should handle a hash with a singular property', async() => {
+        const resource = loader.createCompactedResource({
+          prop: '"a"',
+        });
+        expect(resource.property.prop.term).toEqualRdfTerm(DF.literal('a'));
       });
     });
   });

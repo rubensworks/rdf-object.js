@@ -219,14 +219,34 @@ If you want to create custom Resources yourself, for example during testing,
 then you can create them for any given term:
 
 ```javascript
-new Resource({ term: namedNode('ex:myResource') });
+myLoader.getOrMakeResource(namedNode('ex:myResource'));
 ```
 
-Alternatively, you can use the following convenience constructors to quickly create Resources for a NamedNode or Literal:
+Alternatively, you can use `createCompactedResource` to easily create a resource with compacted properties:
 ```javascript
-Resource.ofIri('ex:myResource'); // === new Resource({ term: namedNode('ex:myResource') })
-Resource.ofString('abc'); // === new Resource({ term: literal('abc') })
+myLoader.createCompactedResource({
+  '@id': 'http://example.org/myId',
+  propertyLiteral: '"abc"',
+  propertyWithList: {
+    list: [
+      '"abc"'
+    ]
+  },
+  propertyWithNestedHash: {
+    nestedProperty: {
+      '@id': 'http://example.org/mySubId',
+    }
+  },
+  propertyWithResource: myLoader.getOrMakeResource(namedNode('ex:myResource')),
+});
 ```
+Special field cases:
+* '@id' represents the IRI identifier.
+* 'list' is considered an RDF list.
+
+Values can be nested hashes, for which other Resources will be created.
+String values will be converted into term sources following the semantics of [rdf-string.js](https://github.com/rubensworks/rdf-string.js#string-to-term).
+Values can also be Resources.
 
 ## License
 This software is written by [Ruben Taelman](http://rubensworks.net/).

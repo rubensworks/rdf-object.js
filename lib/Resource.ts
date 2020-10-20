@@ -1,6 +1,6 @@
 import { JsonLdContextNormalized } from 'jsonld-context-parser';
 import type * as RDF from 'rdf-js';
-import { stringToTerm, termToString } from 'rdf-string';
+import { termToString } from 'rdf-string';
 import { ShortcutPropertyHandler } from './ShortcutPropertyHandler';
 import { SingularPropertyHandler } from './SingularPropertyHandler';
 
@@ -82,22 +82,6 @@ export class Resource {
    */
   public toString(): string {
     return this.value;
-  }
-
-  /**
-   * Create a resource for the given string value.
-   * @param value A string value.
-   */
-  public static ofString(value: string): Resource {
-    return new Resource({ term: stringToTerm(`"${value}"`) });
-  }
-
-  /**
-   * Create a resource for the given IRI value.
-   * @param value An IRI value.
-   */
-  public static ofIri(value: string): Resource {
-    return new Resource({ term: stringToTerm(value) });
   }
 }
 
