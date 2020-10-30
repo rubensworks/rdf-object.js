@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.4.0"></a>
+## [v1.4.0](https://github.com/rubensworks/rdf-object.js/compare/v1.3.0...v1.4.0) - 2020-10-30
+
+### Added
+* [Add toJSON on Resource](https://github.com/rubensworks/rdf-object.js/commit/3fc635e4faad7f2b3c6c4649a44d0dc346ff3313)
+* [Make contextResolved public](https://github.com/rubensworks/rdf-object.js/commit/4ddd61c90e56644014f536dc7445ccb9dc3776a0)
+* [Handle property deletions](https://github.com/rubensworks/rdf-object.js/commit/116fa640197605615d62873bb1f64d03097e6e6e)
+* [Add createCompactedResource helper](https://github.com/rubensworks/rdf-object.js/commit/8c22c98f5b19207ec7d6f1bd09f894670312bf82)
+* [Add convenience Resource constructors](https://github.com/rubensworks/rdf-object.js/commit/e86542e3df64942a413043b91e2aef4bebc13ae0)
+* [Allow properties to be set by shortcut](https://github.com/rubensworks/rdf-object.js/commit/8aebf52b4064eb688bc6faa4ab866d328f1148b9)
+
 <a name="v1.3.0"></a>
 ## [v1.3.0](https://github.com/rubensworks/rdf-object.js/compare/v1.2.0...v1.3.0) - 2020-09-16
 
