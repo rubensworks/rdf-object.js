@@ -14,7 +14,7 @@ export class RdfObjectLoader {
   public readonly normalizeLists: boolean;
   public readonly context: Promise<void>;
   public readonly resources: Record<string, Resource> = {};
-  private contextResolved!: JsonLdContextNormalized;
+  public contextResolved!: JsonLdContextNormalized;
   private contextError: Error | undefined;
 
   public constructor(args?: IRdfClassLoaderArgs) {
