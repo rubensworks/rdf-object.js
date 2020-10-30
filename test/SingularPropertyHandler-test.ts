@@ -47,12 +47,19 @@ describe('SingularPropertyHandler', () => {
     });
 
     it('proxy should allow a property to be set', () => {
-      (object).three = 'b';
-      expect((raw).three).toEqual([ 'b' ]);
+      object.three = 'b';
+      expect(raw.three).toEqual([ 'b' ]);
     });
 
     it('proxy own all keys with values that have an array of size at least 1', () => {
       expect(Object.keys(object)).toEqual([ 'one', 'two', 'three' ]);
+    });
+
+    it('proxy should allow a property to be deleted', () => {
+      object.three = 'b';
+      expect(raw.three).toEqual([ 'b' ]);
+      delete object.three;
+      expect(raw.three).toEqual([]);
     });
   });
 });

@@ -21,4 +21,9 @@ export class SingularPropertyHandler<T> implements ProxyHandler<Record<string, T
   public ownKeys(target: Record<string, T[]>): PropertyKey[] {
     return Object.keys(target).filter(key => this.has(target, key));
   }
+
+  public deleteProperty(target: Record<string, T[]>, propertyKey: PropertyKey): boolean {
+    target[<string> propertyKey] = [];
+    return true;
+  }
 }
