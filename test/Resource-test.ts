@@ -80,6 +80,64 @@ describe('Resource', () => {
         expect(resource.properties['ex:a'][1].term).toEqual(DF.literal('value2'));
       });
     });
+
+    describe('toJSON', () => {
+      it('without properties and list', () => {
+        expect(resource.toJSON()).toEqual('http://example.org/resource1');
+      });
+
+      it('with properties', () => {
+        resource.properties['ex:a'].push(new Resource({ term: DF.literal('value1') }));
+        resource.properties['ex:b'].push(new Resource({ term: DF.literal('value2') }));
+        expect(resource.toJSON()).toEqual({
+          '@id': 'http://example.org/resource1',
+          properties: {
+            'ex:a': [
+              '"value1"',
+            ],
+            'ex:b': [
+              '"value2"',
+            ],
+          },
+        });
+      });
+
+      it('with list', () => {
+        resource.list = [];
+        resource.list.push(new Resource({ term: DF.literal('value1') }));
+        resource.list.push(new Resource({ term: DF.literal('value2') }));
+        expect(resource.toJSON()).toEqual({
+          '@id': 'http://example.org/resource1',
+          list: [
+            '"value1"',
+            '"value2"',
+          ],
+        });
+      });
+
+      it('with list and properties', () => {
+        resource.properties['ex:a'].push(new Resource({ term: DF.literal('value1') }));
+        resource.properties['ex:b'].push(new Resource({ term: DF.literal('value2') }));
+        resource.list = [];
+        resource.list.push(new Resource({ term: DF.literal('value1') }));
+        resource.list.push(new Resource({ term: DF.literal('value2') }));
+        expect(resource.toJSON()).toEqual({
+          '@id': 'http://example.org/resource1',
+          properties: {
+            'ex:a': [
+              '"value1"',
+            ],
+            'ex:b': [
+              '"value2"',
+            ],
+          },
+          list: [
+            '"value1"',
+            '"value2"',
+          ],
+        });
+      });
+    });
   });
 
   describe('constructed with a named node and a property', () => {

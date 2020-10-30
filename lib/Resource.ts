@@ -83,6 +83,27 @@ export class Resource {
   public toString(): string {
     return this.value;
   }
+
+  /**
+   * Create a convenient JSON representation of a Resource.
+   */
+  public toJSON(): any {
+    if (Object.keys(this.properties).length === 0 && !this.list) {
+      return termToString(this.term);
+    }
+    return {
+      '@id': termToString(this.term),
+      ...Object.keys(this.properties).length > 0 ?
+        {
+          properties: Object.keys(this.properties).reduce((acc: any, key) => {
+            acc[key] = this.properties[key].map(resource => resource.toJSON());
+            return acc;
+          }, {}),
+        } :
+        {},
+      ...this.list ? { list: this.list.map(resource => resource.toJSON()) } : {},
+    };
+  }
 }
 
 export interface IResourceArgs {
