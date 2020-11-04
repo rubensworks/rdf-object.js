@@ -95,6 +95,16 @@ describe('RdfObjectLoader', () => {
         expect(loader.resources['http://example.org/listResource'].propertiesUri['http://example.org/listPredicate'][0]
           .list).toEqual([ valueA, valueB, valueC ]);
       });
+
+      it('should normalize an empty list', async() => {
+        await loader.import(streamifyArray([
+          quad('http://example.org/listResource',
+            'http://example.org/listPredicate',
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+        ]));
+        expect(loader.resources['http://example.org/listResource'].propertiesUri['http://example.org/listPredicate'][0]
+          .list).toEqual([]);
+      });
     });
   });
 

@@ -75,6 +75,15 @@ describe('RdfListMaterializer', () => {
       ]);
     });
 
+    it('should parse an empty list', async() => {
+      await materializer.import(streamifyArray([
+        quad('http://example.org/listResource',
+          'http://example.org/listPredicate',
+          'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+      ]));
+      expect(materializer.getRoots()).toEqual([]);
+    });
+
     it('should not parse an incomplete list', async() => {
       await materializer.import(streamifyArray([
         quad('http://example.org/listResource', 'http://example.org/listPredicate', 'http://example.org/l0'),

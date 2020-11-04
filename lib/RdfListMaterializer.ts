@@ -8,9 +8,9 @@ const DF = new DataFactory();
  * A helper class for converting RDF lists to JavaScript RDF term term lists
  */
 export class RdfListMaterializer {
-  private static readonly RDF_FIRST: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first');
-  private static readonly RDF_REST: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest');
-  private static readonly RDF_NIL: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil');
+  public static readonly RDF_FIRST: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first');
+  public static readonly RDF_REST: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest');
+  public static readonly RDF_NIL: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil');
 
   private readonly chains: Record<string, { first: RDF.Term; rest: RDF.Term }> = {};
 

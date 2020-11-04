@@ -118,6 +118,10 @@ export class RdfObjectLoader {
         const subject: Resource = this.getOrMakeResource(quad.subject);
         const predicate: Resource = this.getOrMakeResource(quad.predicate);
         const object: Resource = this.getOrMakeResource(quad.object);
+        // Handle empty RDF lists
+        if (this.normalizeLists && object.term.equals(RdfListMaterializer.RDF_NIL)) {
+          object.list = [];
+        }
         subject.addProperty(predicate, object);
       });
       stream.on('error', reject);
