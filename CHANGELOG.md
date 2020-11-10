@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.4.2"></a>
+## [v1.4.2](https://github.com/rubensworks/rdf-object.js/compare/v1.4.1...v1.4.2) - 2020-11-10
+
+### Fixed
+* [Fix subClassOf being checked for wrong URI](https://github.com/rubensworks/rdf-object.js/commit/e3a3a7d97413ed7b59252b0d007805b76a12fe9a)
+
 <a name="v1.4.1"></a>
 ## [v1.4.1](https://github.com/rubensworks/rdf-object.js/compare/v1.4.0...v1.4.1) - 2020-11-04
 
