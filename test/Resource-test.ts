@@ -230,4 +230,131 @@ describe('Resource', () => {
       return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
     });
   });
+
+  describe('constructed with RDFS subclasses', () => {
+    let term: RDF.Term;
+    let resource: Resource;
+
+    beforeEach(() => {
+      term = DF.namedNode('http://example.org/resource');
+      resource = new Resource({ term, context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('http://www.w3.org/2000/01/rdf-schema#subClassOf'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type1'), context }),
+      );
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('http://www.w3.org/2000/01/rdf-schema#subClassOf'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type2'), context }),
+      );
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('http://www.w3.org/2000/01/rdf-schema#subClassOf'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type3'), context }),
+      );
+    });
+
+    it('should be itself', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
+    });
+
+    it('should be of Type1', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
+    });
+
+    it('should be of Type2', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
+    });
+
+    it('should be of Type3', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
+    });
+
+    it('should not be of Type4', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
+    });
+  });
+
+  describe('constructed with RDF types and RDFS subclasses', () => {
+    let term: RDF.Term;
+    let resource: Resource;
+
+    beforeEach(() => {
+      term = DF.namedNode('http://example.org/resource');
+      resource = new Resource({ term, context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('http://www.w3.org/2000/01/rdf-schema#subClassOf'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type1'), context }),
+      );
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type2'), context }),
+      );
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('http://www.w3.org/2000/01/rdf-schema#subClassOf'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type3'), context }),
+      );
+    });
+
+    it('should be itself', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
+    });
+
+    it('should be of Type1', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
+    });
+
+    it('should be of Type2', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
+    });
+
+    it('should be of Type3', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
+    });
+
+    it('should not be of Type4', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
+    });
+  });
+
+  describe('constructed with chained RDF types and RDFS subclasses', () => {
+    let term: RDF.Term;
+    let resource: Resource;
+
+    beforeEach(() => {
+      term = DF.namedNode('http://example.org/resource');
+      resource = new Resource({ term, context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('http://www.w3.org/2000/01/rdf-schema#subClassOf'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type1'), context }),
+      );
+      resource.propertiesUri['http://www.w3.org/2000/01/rdf-schema#subClassOf'][0].addProperty(
+        new Resource({ term: DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), context }),
+        new Resource({ term: DF.namedNode('http://example.org/Type2'), context }),
+      );
+      resource.propertiesUri['http://www.w3.org/2000/01/rdf-schema#subClassOf'][0]
+        .propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0].addProperty(
+          new Resource({ term: DF.namedNode('http://www.w3.org/2000/01/rdf-schema#subClassOf'), context }),
+          new Resource({ term: DF.namedNode('http://example.org/Type3'), context }),
+        );
+    });
+
+    it('should be itself', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
+    });
+
+    it('should be of Type1', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
+    });
+
+    it('should be of Type2', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
+    });
+
+    it('should be of Type3', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
+    });
+
+    it('should not be of Type4', () => {
+      return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
+    });
+  });
 });

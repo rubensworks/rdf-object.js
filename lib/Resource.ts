@@ -58,7 +58,7 @@ export class Resource {
       return true;
     }
     return (this.propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] || [])
-      .concat(this.propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#subClassOf'] || [])
+      .concat(this.propertiesUri['http://www.w3.org/2000/01/rdf-schema#subClassOf'] || [])
       .reduce((acc: boolean, superType: Resource) => acc || superType.isA(type), false);
   }
 
