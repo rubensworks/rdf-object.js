@@ -1,6 +1,6 @@
 import { JsonLdContextNormalized } from 'jsonld-context-parser';
 import type * as RDF from 'rdf-js';
-import { termToString } from 'rdf-string';
+import { stringToTerm, termToString } from 'rdf-string';
 import { ShortcutPropertyHandler } from './ShortcutPropertyHandler';
 import { SingularPropertyHandler } from './SingularPropertyHandler';
 
@@ -8,6 +8,8 @@ import { SingularPropertyHandler } from './SingularPropertyHandler';
  * A resource is identified by a URI and has property links to other resources.
  */
 export class Resource {
+  private readonly context: JsonLdContextNormalized;
+
   public readonly term: RDF.Term;
   public readonly predicates: Resource[];
   public readonly propertiesUri: Record<string, Resource[]>;
@@ -16,13 +18,12 @@ export class Resource {
   public list: Resource[] | undefined;
 
   public constructor(args: IResourceArgs) {
+    this.context = args.context || new JsonLdContextNormalized({});
     this.term = args.term;
 
     this.predicates = [];
     this.propertiesUri = {};
-    this.properties = new Proxy(this.propertiesUri, new ShortcutPropertyHandler(
-      args.context || new JsonLdContextNormalized({}),
-    ));
+    this.properties = new Proxy(this.propertiesUri, new ShortcutPropertyHandler(this.context));
     this.property = <any> new Proxy(this.properties, new SingularPropertyHandler());
   }
 
@@ -50,10 +51,19 @@ export class Resource {
    * 3. This resource is a subclass of `type`.
    * 4. This resource is a subtype or subclass of a resource that is of the given type.
    *
-   * @param {Term} type An RDF term.
+   * @param {RDF.Term | string} type An RDF term or a compacted term string.
    * @return {boolean} If this resource is of the given type.
    */
-  public isA(type: RDF.Term): boolean {
+  public isA(type: RDF.Term | string): boolean {
+    // Consider strings compacted terms
+    if (typeof type === 'string') {
+      const typeExpanded = this.context.expandTerm(type, true);
+      if (!typeExpanded) {
+        return false;
+      }
+      type = stringToTerm(typeExpanded);
+    }
+
     if (type.equals(this.term)) {
       return true;
     }

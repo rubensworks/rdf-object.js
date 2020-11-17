@@ -5,6 +5,7 @@ import { Resource } from '../lib/Resource';
 
 const context = new JsonLdContextNormalized({
   ex: 'http://example.org/',
+  disabled: null,
 });
 const DF = new DataFactory();
 
@@ -15,7 +16,7 @@ describe('Resource', () => {
 
     beforeEach(() => {
       term = DF.namedNode('http://example.org/resource1');
-      resource = new Resource({ term });
+      resource = new Resource({ term, context });
     });
 
     it('should save the term', () => {
@@ -36,6 +37,18 @@ describe('Resource', () => {
 
     it('should be itself', () => {
       return expect(resource.isA(DF.namedNode('http://example.org/resource1'))).toBeTruthy();
+    });
+
+    it('should be itself for a compacted term', () => {
+      return expect(resource.isA('ex:resource1')).toBeTruthy();
+    });
+
+    it('should not be a different compacted term', () => {
+      return expect(resource.isA('ex:resource2')).toBeFalsy();
+    });
+
+    it('should be false for a disabled compacted term', () => {
+      return expect(resource.isA('disabled')).toBeFalsy();
     });
 
     it('should have no predicates', () => {
@@ -92,10 +105,10 @@ describe('Resource', () => {
         expect(resource.toJSON()).toEqual({
           '@id': 'http://example.org/resource1',
           properties: {
-            'ex:a': [
+            'http://example.org/a': [
               '"value1"',
             ],
-            'ex:b': [
+            'http://example.org/b': [
               '"value2"',
             ],
           },
@@ -124,10 +137,10 @@ describe('Resource', () => {
         expect(resource.toJSON()).toEqual({
           '@id': 'http://example.org/resource1',
           properties: {
-            'ex:a': [
+            'http://example.org/a': [
               '"value1"',
             ],
-            'ex:b': [
+            'http://example.org/b': [
               '"value2"',
             ],
           },
