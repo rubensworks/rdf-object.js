@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.5.0"></a>
+## [v1.5.0](https://github.com/rubensworks/rdf-object.js/compare/v1.4.2...v1.5.0) - 2020-11-17
+
+### Added
+* [Allow compacted string parameters in Resource#isA](https://github.com/rubensworks/rdf-object.js/commit/d63d9b63dcd9acaf0191d94ae3af77463c5abdf4)
+
 <a name="v1.4.2"></a>
 ## [v1.4.2](https://github.com/rubensworks/rdf-object.js/compare/v1.4.1...v1.4.2) - 2020-11-10
 
