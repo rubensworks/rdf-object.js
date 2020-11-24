@@ -2,6 +2,7 @@ import { JsonLdContextNormalized } from 'jsonld-context-parser';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { Resource } from '../lib/Resource';
+import 'jest-rdf';
 
 const context = new JsonLdContextNormalized({
   ex: 'http://example.org/',
@@ -368,6 +369,62 @@ describe('Resource', () => {
 
     it('should not be of Type4', () => {
       return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
+    });
+  });
+
+  describe('toQuads', () => {
+    it('should handle an empty resource', () => {
+      const resource = new Resource({ term: DF.blankNode(), context });
+      return expect(resource.toQuads()).toBeRdfIsomorphic([]);
+    });
+
+    it('should handle a resource with a raw property', () => {
+      const resource = new Resource({ term: DF.blankNode(), context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p'), context }),
+        new Resource({ term: DF.literal('o'), context }),
+      );
+      return expect(resource.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.blankNode(), DF.namedNode('ex:p'), DF.literal('o')),
+      ]);
+    });
+
+    it('should handle a resource with raw properties', () => {
+      const resource = new Resource({ term: DF.blankNode(), context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p1'), context }),
+        new Resource({ term: DF.literal('o1'), context }),
+      );
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p2'), context }),
+        new Resource({ term: DF.literal('o2'), context }),
+      );
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p3'), context }),
+        new Resource({ term: DF.literal('o3'), context }),
+      );
+      return expect(resource.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.blankNode('b1'), DF.namedNode('ex:p1'), DF.literal('o1')),
+        DF.quad(DF.blankNode('b1'), DF.namedNode('ex:p2'), DF.literal('o2')),
+        DF.quad(DF.blankNode('b1'), DF.namedNode('ex:p3'), DF.literal('o3')),
+      ]);
+    });
+
+    it('should handle nested resources', () => {
+      const resourceSub = new Resource({ term: DF.namedNode('ex:s'), context });
+      resourceSub.addProperty(
+        new Resource({ term: DF.namedNode('ex:p2'), context }),
+        new Resource({ term: DF.literal('o2'), context }),
+      );
+      const resource = new Resource({ term: DF.blankNode(), context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p1'), context }),
+        resourceSub,
+      );
+      return expect(resource.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.namedNode('ex:s')),
+        DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p2'), DF.literal('o2')),
+      ]);
     });
   });
 });

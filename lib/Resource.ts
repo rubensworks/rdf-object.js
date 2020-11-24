@@ -1,4 +1,5 @@
 import { JsonLdContextNormalized } from 'jsonld-context-parser';
+import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { stringToTerm, termToString } from 'rdf-string';
 import { ShortcutPropertyHandler } from './ShortcutPropertyHandler';
@@ -113,6 +114,25 @@ export class Resource {
         {},
       ...this.list ? { list: this.list.map(resource => resource.toJSON()) } : {},
     };
+  }
+
+  /**
+   * Convert this resource into an array of RDF quads.
+   */
+  public toQuads(
+    quads: RDF.BaseQuad[] = [],
+    dataFactory: RDF.DataFactory<RDF.BaseQuad> = new DataFactory(),
+  ): RDF.BaseQuad[] {
+    for (const [ property, resources ] of Object.entries(this.propertiesUri)) {
+      const subject = this.term;
+      const predicate = dataFactory.namedNode(property);
+      for (const resource of resources) {
+        const object = resource.term;
+        quads.push(dataFactory.quad(subject, predicate, object));
+        resource.toQuads(quads, dataFactory);
+      }
+    }
+    return quads;
   }
 }
 
