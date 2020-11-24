@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.6.0"></a>
+## [v1.6.0](https://github.com/rubensworks/rdf-object.js/compare/v1.5.0...v1.6.0) - 2020-11-24
+
+### Added
+* [Allow resources to be converted into a quad array with toQuads](https://github.com/rubensworks/rdf-object.js/commit/0cfb7bac733d9cc0ab393f293f222d22951e8ce5)
+
 <a name="v1.5.0"></a>
 ## [v1.5.0](https://github.com/rubensworks/rdf-object.js/compare/v1.4.2...v1.5.0) - 2020-11-17
 
