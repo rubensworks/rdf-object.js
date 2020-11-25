@@ -242,6 +242,14 @@ describe('RdfObjectLoader', () => {
         expect(loader.createCompactedResource('"abc"').term).toEqualRdfTerm(DF.literal('abc'));
       });
 
+      it('should handle boolean values', async() => {
+        expect(loader.createCompactedResource(true).term).toEqualRdfTerm(DF.literal('true'));
+      });
+
+      it('should handle number values', async() => {
+        expect(loader.createCompactedResource(123).term).toEqualRdfTerm(DF.literal('123'));
+      });
+
       it('should handle IRI string values', async() => {
         expect(loader.createCompactedResource('http://example.org/').term)
           .toEqualRdfTerm(DF.namedNode('http://example.org/'));

@@ -63,9 +63,13 @@ export class RdfObjectLoader {
   public createCompactedResource(hash: any): Resource {
     // Create resource for string value
     if (typeof hash !== 'object') {
-      hash = this.contextResolved.expandTerm(hash);
-      if (!hash) {
-        return this.getOrMakeResource(this.dataFactory.blankNode());
+      if (typeof hash === 'string') {
+        hash = this.contextResolved.expandTerm(hash);
+        if (!hash) {
+          return this.getOrMakeResource(this.dataFactory.blankNode());
+        }
+      } else {
+        hash = `"${hash}"`;
       }
       return this.getOrMakeResource(stringToTerm(hash, this.dataFactory));
     }
