@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.7.1"></a>
+## [v1.7.1](https://github.com/rubensworks/rdf-object.js/compare/v1.7.0...v1.7.1) - 2020-11-25
+
+### Fixed
+* [Fix crash on calling createCompactedResource with a non-string primitive](https://github.com/rubensworks/rdf-object.js/commit/37cbe90e39dc730a547a6cb3210dd1d481b5325a)
+
 <a name="v1.7.0"></a>
 ## [v1.7.0](https://github.com/rubensworks/rdf-object.js/compare/v1.6.0...v1.7.0) - 2020-11-25
 

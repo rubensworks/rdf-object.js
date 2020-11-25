@@ -1,6 +1,6 @@
 {
   "name": "rdf-object",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Loads RDF as JSON objects",
   "keywords": [
     "rdf",
