@@ -181,9 +181,12 @@ describe('RdfObjectLoader', () => {
 
     beforeEach(() => {
       context = {
+        ex: 'http://example.org/',
         myP: 'http://example.org/p',
         myP1: 'http://example.org/p1',
         myP2: 'http://example.org/p2',
+        'ex:disabled': null,
+        Type: 'http://example.org/Type',
       };
       loader = new RdfObjectLoader({ context });
     });
@@ -235,8 +238,23 @@ describe('RdfObjectLoader', () => {
     });
 
     describe('createCompactedResource', () => {
-      it('should handle string values', async() => {
+      it('should handle literal string values', async() => {
         expect(loader.createCompactedResource('"abc"').term).toEqualRdfTerm(DF.literal('abc'));
+      });
+
+      it('should handle IRI string values', async() => {
+        expect(loader.createCompactedResource('http://example.org/').term)
+          .toEqualRdfTerm(DF.namedNode('http://example.org/'));
+      });
+
+      it('should handle compacted IRI string values', async() => {
+        expect(loader.createCompactedResource('ex:abc').term)
+          .toEqualRdfTerm(DF.namedNode('http://example.org/abc'));
+      });
+
+      it('should handle disabled IRI string values', async() => {
+        expect(loader.createCompactedResource('ex:disabled').term.termType)
+          .toEqual('BlankNode');
       });
 
       it('should handle resource values', async() => {
@@ -245,13 +263,25 @@ describe('RdfObjectLoader', () => {
       });
 
       it('should handle an empty hash', async() => {
-        expect(loader.createCompactedResource({}).term).toEqualRdfTerm(DF.blankNode());
+        expect(loader.createCompactedResource({})!.term).toEqualRdfTerm(DF.blankNode());
       });
 
       it('should handle a hash with @id', async() => {
         expect(loader.createCompactedResource({
           '@id': 'http://example.org/id',
-        }).term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
+        })!.term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
+      });
+
+      it('should handle a hash with compacted @id', async() => {
+        expect(loader.createCompactedResource({
+          '@id': 'ex:id',
+        })!.term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
+      });
+
+      it('should handle a hash with disabled @id', async() => {
+        expect(loader.createCompactedResource({
+          '@id': 'ex:disabled',
+        }).term.termType).toEqual('BlankNode');
       });
 
       it('should handle a hash with list', async() => {
@@ -276,6 +306,30 @@ describe('RdfObjectLoader', () => {
         expect(resource.list![0].term).toEqualRdfTerm(DF.literal('a'));
       });
 
+      it('should handle a hash with list with compacted term', async() => {
+        const resource = loader.createCompactedResource({
+          list: [
+            'ex:1',
+          ],
+        });
+        expect(resource.list).toBeTruthy();
+        expect(resource.list?.length).toBe(1);
+        expect(resource.list![0].term).toEqualRdfTerm(DF.namedNode('http://example.org/1'));
+      });
+
+      it('should handle a hash with list with disabled term', async() => {
+        const resource = loader.createCompactedResource({
+          list: [
+            'ex:disabled',
+            'ex:2',
+          ],
+        });
+        expect(resource.list).toBeTruthy();
+        expect(resource.list?.length).toBe(2);
+        expect(resource.list![0].term).toEqualRdfTerm(DF.blankNode());
+        expect(resource.list![1].term).toEqualRdfTerm(DF.namedNode('http://example.org/2'));
+      });
+
       it('should handle a hash with a property array', async() => {
         const resource = loader.createCompactedResource({
           prop: [ '"a"', '"b"' ],
@@ -285,10 +339,35 @@ describe('RdfObjectLoader', () => {
         expect(resource.properties.prop[1].term).toEqualRdfTerm(DF.literal('b'));
       });
 
+      it('should handle a hash with a property array with disabled value', async() => {
+        const resource = loader.createCompactedResource({
+          prop: [ 'ex:disabled', '"b"' ],
+        });
+        expect(resource.property.prop.term).toEqualRdfTerm(DF.blankNode());
+        expect(resource.properties.prop[0].term).toEqualRdfTerm(DF.blankNode());
+        expect(resource.properties.prop[1].term).toEqualRdfTerm(DF.literal('b'));
+      });
+
       it('should handle a hash with a singular property', async() => {
         const resource = loader.createCompactedResource({
           prop: '"a"',
         });
+        expect(resource.property.prop.term).toEqualRdfTerm(DF.literal('a'));
+      });
+
+      it('should handle a hash with a singular disabled property', async() => {
+        const resource = loader.createCompactedResource({
+          prop: 'ex:disabled',
+        });
+        expect(resource.property.prop.term).toEqualRdfTerm(DF.blankNode());
+      });
+
+      it('should handle a hash with a singular property and @id', async() => {
+        const resource = loader.createCompactedResource({
+          '@id': 'ex:abc',
+          prop: '"a"',
+        });
+        expect(resource.term).toEqualRdfTerm(DF.namedNode('http://example.org/abc'));
         expect(resource.property.prop.term).toEqualRdfTerm(DF.literal('a'));
       });
     });
