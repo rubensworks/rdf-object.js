@@ -2,6 +2,7 @@ import { JsonLdContextNormalized } from 'jsonld-context-parser';
 import { DataFactory } from 'rdf-data-factory';
 import type * as RDF from 'rdf-js';
 import { stringToTerm, termToString } from 'rdf-string';
+import { RdfListMaterializer } from './RdfListMaterializer';
 import { ShortcutPropertyHandler } from './ShortcutPropertyHandler';
 import { SingularPropertyHandler } from './SingularPropertyHandler';
 
@@ -123,15 +124,35 @@ export class Resource {
     quads: RDF.BaseQuad[] = [],
     dataFactory: RDF.DataFactory<RDF.BaseQuad> = new DataFactory(),
   ): RDF.BaseQuad[] {
+    // Handle predicates
     for (const [ property, resources ] of Object.entries(this.propertiesUri)) {
       const subject = this.term;
       const predicate = dataFactory.namedNode(property);
       for (const resource of resources) {
-        const object = resource.term;
+        const object = resource.list && resource.list.length === 0 ? RdfListMaterializer.RDF_NIL : resource.term;
         quads.push(dataFactory.quad(subject, predicate, object));
         resource.toQuads(quads, dataFactory);
       }
     }
+
+    // Handle RDF lists
+    if (this.list) {
+      let chain = this.term;
+      let chainPrev;
+      for (const element of this.list) {
+        if (chainPrev) {
+          quads.push(dataFactory.quad(chainPrev, RdfListMaterializer.RDF_REST, chain));
+        }
+        quads.push(dataFactory.quad(chain, RdfListMaterializer.RDF_FIRST, element.term));
+        element.toQuads(quads, dataFactory);
+        chainPrev = chain;
+        chain = dataFactory.blankNode();
+      }
+      if (chainPrev) {
+        quads.push(dataFactory.quad(chainPrev, RdfListMaterializer.RDF_REST, RdfListMaterializer.RDF_NIL));
+      }
+    }
+
     return quads;
   }
 }

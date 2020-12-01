@@ -426,5 +426,94 @@ describe('Resource', () => {
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p2'), DF.literal('o2')),
       ]);
     });
+
+    it('should handle empty RDF lists', () => {
+      const resourceList = new Resource({ term: DF.blankNode(), context });
+      resourceList.list = [];
+      const resource = new Resource({ term: DF.blankNode(), context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p1'), context }),
+        resourceList,
+      );
+      return expect(resource.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
+      ]);
+    });
+
+    it('should handle RDF list of size 1', () => {
+      const resourceList = new Resource({ term: DF.blankNode(), context });
+      resourceList.list = [
+        new Resource({ term: DF.literal('a'), context }),
+      ];
+      const resource = new Resource({ term: DF.blankNode(), context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p1'), context }),
+        resourceList,
+      );
+      return expect(resource.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.blankNode('l1')),
+        DF.quad(DF.blankNode('l1'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'),
+          DF.literal('a')),
+        DF.quad(DF.blankNode('l1'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
+      ]);
+    });
+
+    it('should handle RDF list of size 2', () => {
+      const resourceList = new Resource({ term: DF.blankNode(), context });
+      resourceList.list = [
+        new Resource({ term: DF.literal('a'), context }),
+        new Resource({ term: DF.literal('b'), context }),
+      ];
+      const resource = new Resource({ term: DF.blankNode(), context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p1'), context }),
+        resourceList,
+      );
+      return expect(resource.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.blankNode('l1')),
+        DF.quad(DF.blankNode('l1'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'),
+          DF.literal('a')),
+        DF.quad(DF.blankNode('l1'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'),
+          DF.blankNode('l2')),
+        DF.quad(DF.blankNode('l2'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'),
+          DF.literal('b')),
+        DF.quad(DF.blankNode('l2'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
+      ]);
+    });
+
+    it('should handle RDF list with nested resources', () => {
+      const resourceList = new Resource({ term: DF.blankNode(), context });
+      resourceList.list = [
+        new Resource({ term: DF.namedNode('ex:a'), context }),
+      ];
+      resourceList.list[0].addProperty(
+        new Resource({ term: DF.namedNode('ex:p2'), context }),
+        new Resource({ term: DF.literal('o2'), context }),
+      );
+      const resource = new Resource({ term: DF.blankNode(), context });
+      resource.addProperty(
+        new Resource({ term: DF.namedNode('ex:p1'), context }),
+        resourceList,
+      );
+      return expect(resource.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.blankNode('l1')),
+        DF.quad(DF.blankNode('l1'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'),
+          DF.namedNode('ex:a')),
+        DF.quad(DF.blankNode('l1'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'),
+          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
+
+        DF.quad(DF.namedNode('ex:a'), DF.namedNode('ex:p2'), DF.literal('o2')),
+      ]);
+    });
   });
 });
