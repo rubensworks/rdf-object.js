@@ -43,7 +43,7 @@ properties are easily accessible.
 The following examples assume the following imports:
 
 ```javascript
-import {namedNode, literal, triple} as DataFactory from "@rdfjs/data-model"; // External library
+import {namedNode, literal, triple} from "@rdfjs/data-model"; // External library
 import {RdfObjectLoader} from "rdf-object";
 ```
 
