@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.8.0"></a>
+## [v1.8.0](https://github.com/rubensworks/rdf-object.js/compare/v1.7.1...v1.8.0) - 2020-12-03
+
+### Added
+* [Also handle RDF lists in Resource#toQuads](https://github.com/rubensworks/rdf-object.js/commit/70dd1bdce52e6a7a653f0b4c4d3b55c5b1008a7f)
+
 <a name="v1.7.1"></a>
 ## [v1.7.1](https://github.com/rubensworks/rdf-object.js/compare/v1.7.0...v1.7.1) - 2020-11-25
 
