@@ -384,6 +384,28 @@ describe('RdfObjectLoader', () => {
         expect(resource.property.prop.term).toEqualRdfTerm(DF.literal('a'));
       });
     });
+
+    describe('createCompactedResources', () => {
+      it('should a hash', async() => {
+        expect(loader.createCompactedResources({
+          '@id': 'http://example.org/id',
+        })[0]!.term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
+      });
+
+      it('should an array of hashes', async() => {
+        const resources = loader.createCompactedResources([
+          {
+            '@id': 'http://example.org/id1',
+          },
+          {
+            '@id': 'http://example.org/id2',
+          },
+        ]);
+        expect(resources.length).toEqual(2);
+        expect(resources[0].term).toEqualRdfTerm(DF.namedNode('http://example.org/id1'));
+        expect(resources[1].term).toEqualRdfTerm(DF.namedNode('http://example.org/id2'));
+      });
+    });
   });
 
   describe('an instance with erroring context', () => {

@@ -120,6 +120,17 @@ export class RdfObjectLoader {
   }
 
   /**
+   * Create resources for the given hash or array by delegating array entries to {@link createCompactedResource}.
+   * @param hashOrArray A hash or array of hashes containing compacted properties.
+   */
+  public createCompactedResources(hashOrArray: any): Resource[] {
+    if (Array.isArray(hashOrArray)) {
+      return hashOrArray.map(hash => this.createCompactedResource(hash));
+    }
+    return [ this.createCompactedResource(hashOrArray) ];
+  }
+
+  /**
    * Import the given stream of RDF quads.
    * Resources will be created and linked for all passed terms.
    * @param {Stream} stream A stream of RDF quads.
@@ -135,7 +146,7 @@ export class RdfObjectLoader {
     }
 
     // Wait until stream has been handled completely
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       stream.on('data', (quad: Q) => {
         const subject: Resource = this.getOrMakeResource(quad.subject);
         const predicate: Resource = this.getOrMakeResource(quad.predicate);
