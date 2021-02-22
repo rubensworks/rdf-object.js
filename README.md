@@ -246,7 +246,7 @@ Special field cases:
 
 Values can be nested hashes, for which other Resources will be created.
 String values will be converted into term sources following the semantics of [rdf-string.js](https://github.com/rubensworks/rdf-string.js#string-to-term).
-Values can also be Resources.
+Values can also be Resources or RDF/JS terms.
 
 ## License
 This software is written by [Ruben Taelman](http://rubensworks.net/).

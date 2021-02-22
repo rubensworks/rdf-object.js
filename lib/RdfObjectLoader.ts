@@ -79,6 +79,11 @@ export class RdfObjectLoader {
       return hash;
     }
 
+    // Wrap terms in resources
+    if ('termType' in hash && 'equals' in hash) {
+      return this.getOrMakeResource(hash);
+    }
+
     // Create resource for named node term by @id value, or blank node
     let term: RDF.Term;
     if (hash['@id']) {

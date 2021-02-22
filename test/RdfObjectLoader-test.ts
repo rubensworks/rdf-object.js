@@ -270,6 +270,11 @@ describe('RdfObjectLoader', () => {
         expect(loader.createCompactedResource(resource)).toBe(resource);
       });
 
+      it('should handle term values', async() => {
+        const term = DF.blankNode();
+        expect(loader.createCompactedResource(term).term).toBe(term);
+      });
+
       it('should handle an empty hash', async() => {
         expect(loader.createCompactedResource({})!.term).toEqualRdfTerm(DF.blankNode());
       });
