@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.10.1"></a>
+## [v1.10.1](https://github.com/rubensworks/rdf-object.js/compare/v1.10.0...v1.10.1) - 2021-03-04
+
+### Fixed
+* [Fix stackoverflow when calling toQuads on cyclic Resources, Closes #28](https://github.com/rubensworks/rdf-object.js/commit/0d897660cf67dde8d1d8aedaaaedb0fdf6c17967)
+
 <a name="v1.10.0"></a>
 ## [v1.10.0](https://github.com/rubensworks/rdf-object.js/compare/v1.9.0...v1.10.0) - 2021-02-23
 
