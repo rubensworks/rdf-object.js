@@ -515,5 +515,45 @@ describe('Resource', () => {
         DF.quad(DF.namedNode('ex:a'), DF.namedNode('ex:p2'), DF.literal('o2')),
       ]);
     });
+
+    it('should handle cyclic resources', () => {
+      const resource1 = new Resource({ term: DF.namedNode('ex:s1'), context });
+      const resource2 = new Resource({ term: DF.namedNode('ex:s2'), context });
+      resource1.addProperty(
+        new Resource({ term: DF.namedNode('ex:p1'), context }),
+        resource2,
+      );
+      resource2.addProperty(
+        new Resource({ term: DF.namedNode('ex:p2'), context }),
+        resource1,
+      );
+      return expect(resource1.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:s2')),
+        DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:s1')),
+      ]);
+    });
+
+    it('should handle indirect cyclic resources', () => {
+      const resource1 = new Resource({ term: DF.namedNode('ex:s1'), context });
+      const resource2 = new Resource({ term: DF.namedNode('ex:s2'), context });
+      const resource3 = new Resource({ term: DF.namedNode('ex:s3'), context });
+      resource1.addProperty(
+        new Resource({ term: DF.namedNode('ex:p1'), context }),
+        resource2,
+      );
+      resource2.addProperty(
+        new Resource({ term: DF.namedNode('ex:p2'), context }),
+        resource3,
+      );
+      resource3.addProperty(
+        new Resource({ term: DF.namedNode('ex:p3'), context }),
+        resource1,
+      );
+      return expect(resource1.toQuads()).toBeRdfIsomorphic([
+        DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:s2')),
+        DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:s3')),
+        DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:s1')),
+      ]);
+    });
   });
 });

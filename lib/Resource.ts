@@ -123,7 +123,15 @@ export class Resource {
   public toQuads(
     quads: RDF.BaseQuad[] = [],
     dataFactory: RDF.DataFactory<RDF.BaseQuad> = new DataFactory(),
+    excludeResources: Record<string, boolean> = {},
   ): RDF.BaseQuad[] {
+    // Circumvent infinite recursion by checking and maintaining emittedResources
+    const resourceId = termToString(this.term);
+    if (excludeResources[resourceId]) {
+      return [];
+    }
+    excludeResources[resourceId] = true;
+
     // Handle predicates
     for (const [ property, resources ] of Object.entries(this.propertiesUri)) {
       const subject = this.term;
@@ -131,7 +139,7 @@ export class Resource {
       for (const resource of resources) {
         const object = resource.list && resource.list.length === 0 ? RdfListMaterializer.RDF_NIL : resource.term;
         quads.push(dataFactory.quad(subject, predicate, object));
-        resource.toQuads(quads, dataFactory);
+        resource.toQuads(quads, dataFactory, excludeResources);
       }
     }
 
@@ -144,7 +152,7 @@ export class Resource {
           quads.push(dataFactory.quad(chainPrev, RdfListMaterializer.RDF_REST, chain));
         }
         quads.push(dataFactory.quad(chain, RdfListMaterializer.RDF_FIRST, element.term));
-        element.toQuads(quads, dataFactory);
+        element.toQuads(quads, dataFactory, excludeResources);
         chainPrev = chain;
         chain = dataFactory.blankNode();
       }
