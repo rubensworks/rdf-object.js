@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.10.2"></a>
+## [v1.10.2](https://github.com/rubensworks/rdf-object.js/compare/v1.10.1...v1.10.2) - 2021-03-23
+
+### Fixed
+* [Fix TS compilation issues related to ProxyHandler](https://github.com/rubensworks/rdf-object.js/commit/757436e78f57fa93161a7a6fb79f28e622a4589c)
+
 <a name="v1.10.1"></a>
 ## [v1.10.1](https://github.com/rubensworks/rdf-object.js/compare/v1.10.0...v1.10.1) - 2021-03-04
 
