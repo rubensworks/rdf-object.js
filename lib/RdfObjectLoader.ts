@@ -161,8 +161,8 @@ export class RdfObjectLoader {
       stream.on('end', () => {
         if (this.normalizeLists) {
           for (const listRoot of listMaterializer.getRoots()) {
-            const listTerms = <RDF.Term[]> listMaterializer.getList(listRoot);
-            this.resources[termToString(listRoot)].list = listTerms.map(term => this.resources[termToString(term)]);
+            const listTerms = listMaterializer.getList(listRoot);
+            this.resources[termToString(listRoot)].list = listTerms!.map(term => this.resources[termToString(term)]);
           }
         }
         resolve();

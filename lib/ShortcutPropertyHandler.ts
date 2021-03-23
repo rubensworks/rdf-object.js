@@ -11,11 +11,11 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<Record<string, T
     this.context = context;
   }
 
-  public has(target: Record<string, T[]>, propertyKey: PropertyKey): boolean {
+  public has(target: Record<string, T[]>, propertyKey: string | symbol): boolean {
     return this.get(target, propertyKey).length > 0;
   }
 
-  public get(target: Record<string, T[]>, propertyKey: PropertyKey): T[] {
+  public get(target: Record<string, T[]>, propertyKey: string | symbol): T[] {
     const iri = this.context.expandTerm(this.toTermString(propertyKey), true);
     if (!iri) {
       throw new Error(`Illegal property getting for disabled context key '${this.toTermString(propertyKey)}'`);
@@ -26,7 +26,7 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<Record<string, T
     return target[iri];
   }
 
-  public set(target: Record<string, T[]>, propertyKey: PropertyKey, value: any): boolean {
+  public set(target: Record<string, T[]>, propertyKey: string | symbol, value: any): boolean {
     const iri = this.context.expandTerm(this.toTermString(propertyKey), true);
     if (!iri) {
       throw new Error(`Illegal property setting for disabled context key '${this.toTermString(propertyKey)}'`);
@@ -35,13 +35,13 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<Record<string, T
     return true;
   }
 
-  public ownKeys(target: Record<string, T[]>): PropertyKey[] {
+  public ownKeys(target: Record<string, T[]>): (string | symbol)[] {
     return <string[]> Object.keys(target)
       .map((key: string) => this.context.expandTerm(key, true))
       .filter(key => key && this.has(target, key));
   }
 
-  private toTermString(propertyKey: PropertyKey): string {
+  private toTermString(propertyKey: string | symbol): string {
     return typeof propertyKey === 'string' ? propertyKey : String(propertyKey);
   }
 }
