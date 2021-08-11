@@ -1,6 +1,6 @@
+import type * as RDF from '@rdfjs/types';
 import { JsonLdContextNormalized } from 'jsonld-context-parser';
 import { DataFactory } from 'rdf-data-factory';
-import type * as RDF from 'rdf-js';
 import { Resource } from '../lib/Resource';
 import 'jest-rdf';
 

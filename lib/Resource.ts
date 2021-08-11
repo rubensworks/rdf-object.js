@@ -1,6 +1,6 @@
+import type * as RDF from '@rdfjs/types';
 import { JsonLdContextNormalized } from 'jsonld-context-parser';
 import { DataFactory } from 'rdf-data-factory';
-import type * as RDF from 'rdf-js';
 import { stringToTerm, termToString } from 'rdf-string';
 import { RdfListMaterializer } from './RdfListMaterializer';
 import { ShortcutPropertyHandler } from './ShortcutPropertyHandler';

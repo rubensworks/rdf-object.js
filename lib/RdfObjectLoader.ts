@@ -1,7 +1,7 @@
+import type * as RDF from '@rdfjs/types';
 import type { JsonLdContextNormalized, JsonLdContext } from 'jsonld-context-parser';
 import { ContextParser } from 'jsonld-context-parser';
 import { DataFactory } from 'rdf-data-factory';
-import type * as RDF from 'rdf-js';
 import { stringToTerm, termToString } from 'rdf-string';
 import { RdfListMaterializer } from './RdfListMaterializer';
 import { Resource } from './Resource';
