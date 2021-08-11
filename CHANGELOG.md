@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.11.0"></a>
+## [v1.11.0](https://github.com/rubensworks/rdf-object.js/compare/v1.10.2...v1.11.0) - 2021-08-11
+
+### Changed
+* [Migrate to @rdfjs/types](https://github.com/rubensworks/rdf-object.js/commit/3035113964ce8e3009ef0aa778339d19ae302615)
+
 <a name="v1.10.2"></a>
 ## [v1.10.2](https://github.com/rubensworks/rdf-object.js/compare/v1.10.1...v1.10.2) - 2021-03-23
 
