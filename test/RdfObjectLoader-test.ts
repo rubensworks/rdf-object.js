@@ -1,3 +1,4 @@
+import { Readable } from 'stream';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
 import { RdfObjectLoader } from '../lib/RdfObjectLoader';
@@ -104,6 +105,14 @@ describe('RdfObjectLoader', () => {
         ]));
         expect(loader.resources['http://example.org/listResource'].propertiesUri['http://example.org/listPredicate'][0]
           .list).toEqual([]);
+      });
+
+      it('should reject on an erroring stream', async() => {
+        const errorStream = new Readable();
+        errorStream._read = () => {
+          errorStream.emit('error', new Error('Error stream RdfObjectLoader-test'));
+        };
+        await expect(loader.import(errorStream)).rejects.toThrowError('Error stream RdfObjectLoader-test');
       });
     });
   });

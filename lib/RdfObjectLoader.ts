@@ -146,7 +146,7 @@ export class RdfObjectLoader {
     }
 
     // Wait until stream has been handled completely
-    await new Promise<void>((resolve, reject) => {
+    const streamPromise = new Promise<void>((resolve, reject) => {
       stream.on('data', (quad: Q) => {
         const subject: Resource = this.getOrMakeResource(quad.subject);
         const predicate: Resource = this.getOrMakeResource(quad.predicate);
@@ -169,8 +169,8 @@ export class RdfObjectLoader {
       });
     });
 
-    // Catches errors from list materialization
-    await listMaterializerPromise;
+    // Catches errors from stream and list materialization
+    await Promise.all([ streamPromise, listMaterializerPromise ]);
     if (this.contextError) {
       throw this.contextError;
     }
