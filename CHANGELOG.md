@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.11.1"></a>
+## [v1.11.1](https://github.com/rubensworks/rdf-object.js/compare/v1.11.0...v1.11.1) - 2021-08-13
+
+### Fixed
+* [Fix unhandled promise rejection on erroring stream imports in Node 16](https://github.com/rubensworks/rdf-object.js/commit/18b03589b797ea932d7c5afd10f58168aaf22138)
+
 <a name="v1.11.0"></a>
 ## [v1.11.0](https://github.com/rubensworks/rdf-object.js/compare/v1.10.2...v1.11.0) - 2021-08-11
 
