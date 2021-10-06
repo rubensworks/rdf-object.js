@@ -196,6 +196,7 @@ describe('RdfObjectLoader', () => {
         myP2: 'http://example.org/p2',
         'ex:disabled': null,
         Type: 'http://example.org/Type',
+        '@vocab': 'http://vocab.org/',
       };
       loader = new RdfObjectLoader({ context });
     });
@@ -391,6 +392,64 @@ describe('RdfObjectLoader', () => {
         });
         expect(resource.term).toEqualRdfTerm(DF.namedNode('http://example.org/abc'));
         expect(resource.property.prop.term).toEqualRdfTerm(DF.literal('a'));
+      });
+
+      it('should handle @type', async() => {
+        const resource = loader.createCompactedResource({
+          '@id': 'ex:abc',
+          '@type': 'ex:Type',
+        });
+        expect(resource.term).toEqualRdfTerm(DF.namedNode('http://example.org/abc'));
+        expect(resource.propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0].term)
+          .toEqualRdfTerm(DF.namedNode('http://example.org/Type'));
+      });
+
+      it('should handle @type using @vocab', async() => {
+        const resource = loader.createCompactedResource({
+          '@id': 'ex:abc',
+          '@type': 'Type2',
+        });
+        expect(resource.term).toEqualRdfTerm(DF.namedNode('http://example.org/abc'));
+        expect(resource.propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0].term)
+          .toEqualRdfTerm(DF.namedNode('http://vocab.org/Type2'));
+      });
+
+      it('should handle multiple @types', async() => {
+        const resource = loader.createCompactedResource({
+          '@id': 'ex:abc',
+          '@type': [ 'ex:Type1', 'Type2' ],
+        });
+        expect(resource.term).toEqualRdfTerm(DF.namedNode('http://example.org/abc'));
+        expect(resource.propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0].term)
+          .toEqualRdfTerm(DF.namedNode('http://example.org/Type1'));
+        expect(resource.propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][1].term)
+          .toEqualRdfTerm(DF.namedNode('http://vocab.org/Type2'));
+      });
+
+      it('should handle @type with resource', async() => {
+        const resource = loader.createCompactedResource({
+          '@id': 'ex:abc',
+          '@type': { '@id': 'ex:Type' },
+        });
+        expect(resource.term).toEqualRdfTerm(DF.namedNode('http://example.org/abc'));
+        expect(resource.propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0].term)
+          .toEqualRdfTerm(DF.namedNode('http://example.org/Type'));
+      });
+
+      it('should handle @type with blank node', async() => {
+        context = {
+          Nullified: null,
+        };
+        loader = new RdfObjectLoader({ context });
+        await loader.context;
+
+        const resource = loader.createCompactedResource({
+          '@id': 'ex:abc',
+          '@type': 'Nullified',
+        });
+        expect(resource.term).toEqualRdfTerm(DF.namedNode('ex:abc'));
+        expect(resource.propertiesUri['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'][0].term)
+          .toEqualRdfTerm(DF.blankNode());
       });
     });
 

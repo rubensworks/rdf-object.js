@@ -101,7 +101,24 @@ export class RdfObjectLoader {
     // Iterate over all entries in the hash
     for (const [ key, value ] of Object.entries(hash)) {
       // Skip keys starting with '@'
-      if (!key.startsWith('@')) {
+      if (key === '@type') {
+        for (const subValue of Array.isArray(value) ? value : [ value ]) {
+          let typeResource: Resource;
+          if (typeof subValue === 'string') {
+            const expandedId = this.contextResolved.expandTerm(subValue, true);
+            let termType: RDF.Term;
+            if (expandedId) {
+              termType = this.dataFactory.namedNode(expandedId);
+            } else {
+              termType = this.dataFactory.blankNode();
+            }
+            typeResource = this.getOrMakeResource(termType);
+          } else {
+            typeResource = this.createCompactedResource(subValue);
+          }
+          resource.properties['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'].push(typeResource);
+        }
+      } else if (!key.startsWith('@')) {
         if (key === 'list') {
           // Handle RDF list entries
           resource.list = [];
