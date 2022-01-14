@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.13.0"></a>
+## [v1.13.0](https://github.com/rubensworks/rdf-object.js/compare/v1.12.0...v1.13.0) - 2022-01-14
+
+### Added
+* [Allow a max depth to be passed to Resource#toJSON](https://github.com/rubensworks/rdf-object.js/commit/112cd35cbb939480e220e0ce346602a76d25ad3d)
+
 <a name="v1.12.0"></a>
 ## [v1.12.0](https://github.com/rubensworks/rdf-object.js/compare/v1.11.0...v1.12.0) - 2021-10-06
 
