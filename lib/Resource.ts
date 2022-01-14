@@ -100,21 +100,21 @@ export class Resource {
   /**
    * Create a convenient JSON representation of a Resource.
    */
-  public toJSON(): any {
+  public toJSON(maxDepth = -1): any {
     if (Object.keys(this.properties).length === 0 && !this.list) {
       return termToString(this.term);
     }
     return {
       '@id': termToString(this.term),
-      ...Object.keys(this.properties).length > 0 ?
+      ...maxDepth !== 0 && Object.keys(this.properties).length > 0 ?
         {
           properties: Object.keys(this.properties).reduce((acc: any, key) => {
-            acc[key] = this.properties[key].map(resource => resource.toJSON());
+            acc[key] = this.properties[key].map(resource => resource.toJSON(maxDepth - 1));
             return acc;
           }, {}),
         } :
         {},
-      ...this.list ? { list: this.list.map(resource => resource.toJSON()) } : {},
+      ...maxDepth !== 0 && this.list ? { list: this.list.map(resource => resource.toJSON(maxDepth - 1)) } : {},
     };
   }
 
