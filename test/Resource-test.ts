@@ -151,6 +151,136 @@ describe('Resource', () => {
           ],
         });
       });
+
+      it('with nested list and properties and no max depth', () => {
+        const value1 = new Resource({ term: DF.namedNode('ex:value1') });
+        const value1_1 = new Resource({ term: DF.namedNode('ex:value1.1') });
+        const value1_1_1 = new Resource({ term: DF.namedNode('ex:value1.1.1') });
+        value1_1.properties['ex:a.1.1'].push(value1_1_1);
+        value1.properties['ex:a.1'].push(value1_1);
+        resource.properties['ex:a'].push(value1);
+        resource.properties['ex:b'].push(new Resource({ term: DF.literal('value2') }));
+        resource.list = [];
+        resource.list.push(value1);
+        resource.list.push(new Resource({ term: DF.literal('value2') }));
+        expect(resource.toJSON()).toEqual({
+          '@id': 'http://example.org/resource1',
+          properties: {
+            'http://example.org/a': [
+              {
+                '@id': 'ex:value1',
+                properties: {
+                  'ex:a.1': [
+                    {
+                      '@id': 'ex:value1.1',
+                      properties: {
+                        'ex:a.1.1': [
+                          'ex:value1.1.1',
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            'http://example.org/b': [
+              '"value2"',
+            ],
+          },
+          list: [
+            {
+              '@id': 'ex:value1',
+              properties: {
+                'ex:a.1': [
+                  {
+                    '@id': 'ex:value1.1',
+                    properties: {
+                      'ex:a.1.1': [
+                        'ex:value1.1.1',
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            '"value2"',
+          ],
+        });
+      });
+
+      it('with nested list and properties and a max depth of 1', () => {
+        const value1 = new Resource({ term: DF.namedNode('ex:value1') });
+        const value1_1 = new Resource({ term: DF.namedNode('ex:value1.1') });
+        const value1_1_1 = new Resource({ term: DF.namedNode('ex:value1.1.1') });
+        value1_1.properties['ex:a.1.1'].push(value1_1_1);
+        value1.properties['ex:a.1'].push(value1_1);
+        resource.properties['ex:a'].push(value1);
+        resource.properties['ex:b'].push(new Resource({ term: DF.literal('value2') }));
+        resource.list = [];
+        resource.list.push(value1);
+        resource.list.push(new Resource({ term: DF.literal('value2') }));
+        expect(resource.toJSON(1)).toEqual({
+          '@id': 'http://example.org/resource1',
+          properties: {
+            'http://example.org/a': [
+              { '@id': 'ex:value1' },
+            ],
+            'http://example.org/b': [
+              '"value2"',
+            ],
+          },
+          list: [
+            { '@id': 'ex:value1' },
+            '"value2"',
+          ],
+        });
+      });
+
+      it('with nested list and properties and a max depth of 2', () => {
+        const value1 = new Resource({ term: DF.namedNode('ex:value1') });
+        const value1_1 = new Resource({ term: DF.namedNode('ex:value1.1') });
+        const value1_1_1 = new Resource({ term: DF.namedNode('ex:value1.1.1') });
+        value1_1.properties['ex:a.1.1'].push(value1_1_1);
+        value1.properties['ex:a.1'].push(value1_1);
+        resource.properties['ex:a'].push(value1);
+        resource.properties['ex:b'].push(new Resource({ term: DF.literal('value2') }));
+        resource.list = [];
+        resource.list.push(value1);
+        resource.list.push(new Resource({ term: DF.literal('value2') }));
+        expect(resource.toJSON(2)).toEqual({
+          '@id': 'http://example.org/resource1',
+          properties: {
+            'http://example.org/a': [
+              {
+                '@id': 'ex:value1',
+                properties: {
+                  'ex:a.1': [
+                    {
+                      '@id': 'ex:value1.1',
+                    },
+                  ],
+                },
+              },
+            ],
+            'http://example.org/b': [
+              '"value2"',
+            ],
+          },
+          list: [
+            {
+              '@id': 'ex:value1',
+              properties: {
+                'ex:a.1': [
+                  {
+                    '@id': 'ex:value1.1',
+                  },
+                ],
+              },
+            },
+            '"value2"',
+          ],
+        });
+      });
     });
   });
 
