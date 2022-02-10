@@ -394,6 +394,15 @@ describe('RdfObjectLoader', () => {
         expect(resource.property.prop.term).toEqualRdfTerm(DF.literal('a'));
       });
 
+      it('should handle a hash with an undefined value', async() => {
+        const resource = loader.createCompactedResource({
+          '@id': 'ex:abc',
+          prop: undefined,
+        });
+        expect(resource.term).toEqualRdfTerm(DF.namedNode('http://example.org/abc'));
+        expect(resource.property.prop).toBeUndefined();
+      });
+
       it('should handle @type', async() => {
         const resource = loader.createCompactedResource({
           '@id': 'ex:abc',

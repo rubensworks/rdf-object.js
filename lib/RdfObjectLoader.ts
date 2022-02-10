@@ -128,7 +128,9 @@ export class RdfObjectLoader {
         } else {
           // Handle compacted properties
           for (const subValue of Array.isArray(value) ? value : [ value ]) {
-            resource.properties[key].push(this.createCompactedResource(subValue));
+            if (subValue !== undefined) {
+              resource.properties[key].push(this.createCompactedResource(subValue));
+            }
           }
         }
       }
