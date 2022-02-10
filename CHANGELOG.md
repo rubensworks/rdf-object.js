@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.13.1"></a>
+## [v1.13.1](https://github.com/rubensworks/rdf-object.js/compare/v1.12.0...v1.13.1) - 2022-02-10
+
+### Fixed
+* [Fix compacted resources with undefined values not being ignored](https://github.com/rubensworks/rdf-object.js/commit/4d20f873d6a9e03f35cc7f9ed3398ea87fd8ebe8)
+
 <a name="v1.13.0"></a>
 ## [v1.13.0](https://github.com/rubensworks/rdf-object.js/compare/v1.12.0...v1.13.0) - 2022-01-14
 
