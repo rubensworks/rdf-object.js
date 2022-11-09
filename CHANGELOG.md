@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.13.2"></a>
+## [v1.13.2](https://github.com/rubensworks/rdf-object.js/compare/v1.12.0...v1.13.2) - 2022-11-09
+
+### Fixed
+* [Include source map files in packed files](https://github.com/rubensworks/rdf-object.js/commit/b58b6adb4b8df8a6e80228aded4f98839c736ac6)
+
 <a name="v1.13.1"></a>
 ## [v1.13.1](https://github.com/rubensworks/rdf-object.js/compare/v1.12.0...v1.13.1) - 2022-02-10
 
