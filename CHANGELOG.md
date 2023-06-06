@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v1.14.0"></a>
+## [v1.14.0](https://github.com/rubensworks/rdf-object.js/compare/v1.13.2...v1.14.0) - 2023-06-06
+
+### Added
+* [Add option to prevent literals from being cached](https://github.com/rubensworks/rdf-object.js/commit/ecd2732eedb2e00e59aaec219045400038f5ea0f)
+
 <a name="v1.13.2"></a>
 ## [v1.13.2](https://github.com/rubensworks/rdf-object.js/compare/v1.12.0...v1.13.2) - 2022-11-09
 
