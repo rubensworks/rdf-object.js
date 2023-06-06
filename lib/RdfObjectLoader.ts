@@ -12,6 +12,7 @@ import { Resource } from './Resource';
 export class RdfObjectLoader {
   private readonly dataFactory: RDF.DataFactory;
   public readonly normalizeLists: boolean;
+  public readonly uniqueLiterals: boolean;
   public readonly context: Promise<void>;
   public readonly resources: Record<string, Resource> = {};
   public contextResolved!: JsonLdContextNormalized;
@@ -20,6 +21,7 @@ export class RdfObjectLoader {
   public constructor(args?: IRdfClassLoaderArgs) {
     this.dataFactory = args?.dataFactory || new DataFactory();
     this.normalizeLists = !args || !('normalizeLists' in args) || Boolean(args.normalizeLists);
+    this.uniqueLiterals = Boolean(args?.uniqueLiterals);
 
     this.context = new ContextParser().parse(args && args.context || {})
       .then(contextResolved => {
@@ -37,6 +39,10 @@ export class RdfObjectLoader {
    * @return {Resource} A resource.
    */
   public getOrMakeResource(term: RDF.Term): Resource {
+    if (this.uniqueLiterals && term.termType === 'Literal') {
+      return new Resource({ term, context: this.contextResolved });
+    }
+
     const termString: string = termToString(term);
     let resource: Resource = this.resources[termString];
     if (!resource) {
@@ -181,7 +187,7 @@ export class RdfObjectLoader {
         if (this.normalizeLists) {
           for (const listRoot of listMaterializer.getRoots()) {
             const listTerms = listMaterializer.getList(listRoot);
-            this.resources[termToString(listRoot)].list = listTerms!.map(term => this.resources[termToString(term)]);
+            this.resources[termToString(listRoot)].list = listTerms!.map(term => this.getOrMakeResource(term));
           }
         }
         resolve();
@@ -221,4 +227,9 @@ export interface IRdfClassLoaderArgs {
    * The factory to create RDF terms and quads with.
    */
   dataFactory?: RDF.DataFactory;
+  /**
+   * If set to true literals will not be cached.
+   * Defaults to false.
+   */
+  uniqueLiterals?: boolean;
 }

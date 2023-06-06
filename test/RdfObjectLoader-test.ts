@@ -501,4 +501,48 @@ describe('RdfObjectLoader', () => {
       });
     });
   });
+
+  describe('an instance with unique literals', (): void => {
+    let loader: RdfObjectLoader;
+
+    beforeEach((): void => {
+      loader = new RdfObjectLoader({ uniqueLiterals: true });
+    });
+
+    it('does not store literals in the resource cache.', async(): Promise<void> => {
+      await loader.import(streamifyArray([
+        quad('http://example.org/s', 'http://example.org/p', '"test"'),
+      ]));
+      const resourceP = loader.getOrMakeResource(DF.namedNode('http://example.org/p'));
+      const resourceS = loader.getOrMakeResource(DF.namedNode('http://example.org/s'));
+      expect(loader.resources).toEqual({
+        'http://example.org/p': resourceP,
+        'http://example.org/s': resourceS,
+      });
+      expect(loader.resources['"test"']).toBeUndefined();
+    });
+
+    it('should normalize a list', async() => {
+      await loader.import(streamifyArray([
+        quad('http://example.org/listResource', 'http://example.org/listPredicate', 'http://example.org/l0'),
+        quad('http://example.org/l0', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"A"'),
+        quad('http://example.org/l0', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l1'),
+        quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"B"'),
+        quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l2'),
+        quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"C"'),
+        quad('http://example.org/l2',
+          'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
+          'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+      ]));
+      const valueA = loader.getOrMakeResource(DF.literal('A'));
+      const valueB = loader.getOrMakeResource(DF.literal('B'));
+      const valueC = loader.getOrMakeResource(DF.literal('C'));
+      const list = loader.resources['http://example.org/listResource']
+        .propertiesUri['http://example.org/listPredicate'][0].list;
+      expect(list?.[0]).not.toBe(valueA);
+      expect(list?.[0].value).toEqual(valueA.value);
+      expect(list?.[1].value).toEqual(valueB.value);
+      expect(list?.[2].value).toEqual(valueC.value);
+    });
+  });
 });
