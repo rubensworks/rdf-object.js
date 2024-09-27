@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v2.0.0"></a>
+## [v2.0.0](https://github.com/rubensworks/rdf-object.js/compare/v1.14.0...v2.0.0) - 2024-09-27
+
+### BREAKING CHANGE
+* [Update to jsonld-context-parser v3](https://github.com/rubensworks/rdf-object.js/commit/03e54c5070675dd2c831524f5b3f1e6b4fc88663) This is not a breaking change for users of Node 18+
+
+### Changed
+* [Update dependency arrayify-stream to v3](https://github.com/rubensworks/rdf-object.js/commit/90ac35c4642d53c07202cd50c5eae5484f4efbe3)
+
 <a name="v1.14.0"></a>
 ## [v1.14.0](https://github.com/rubensworks/rdf-object.js/compare/v1.13.2...v1.14.0) - 2023-06-06
 
