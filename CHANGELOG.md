@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+<a name="v3.0.0"></a>
+## [v3.0.0](https://github.com/rubensworks/rdf-object.js/compare/v2.0.0...v3.0.0) - 2025-01-08
+
+### BREAKING CHANGES
+* [Update to rdf-data-factory v2](https://github.com/rubensworks/rdf-object.js/commit/fbdc5444ae848357bd2b134b85b7bc50ffec5d62)
+    This includes a bump to @rdfjs/types@2.0.0, which requires TypeScript 5 and Node 14+
+
 <a name="v2.0.0"></a>
 ## [v2.0.0](https://github.com/rubensworks/rdf-object.js/compare/v1.14.0...v2.0.0) - 2024-09-27
 
