@@ -108,6 +108,7 @@ export class Resource {
       '@id': termToString(this.term),
       ...maxDepth !== 0 && Object.keys(this.properties).length > 0 ?
         {
+          // eslint-disable-next-line unicorn/prefer-object-from-entries
           properties: Object.keys(this.properties).reduce((acc: any, key) => {
             acc[key] = this.properties[key].map(resource => resource.toJSON(maxDepth - 1));
             return acc;
