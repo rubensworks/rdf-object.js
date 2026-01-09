@@ -54,7 +54,7 @@
     "jest": "^29.0.0",
     "jest-rdf": "^2.0.0",
     "manual-git-changelog": "^1.0.1",
-    "n3": "^1.6.3",
+    "n3": "^2.0.0",
     "pre-commit": "^1.2.2",
     "rdf-quad": "^2.0.0",
     "streamify-string": "^1.0.1",
