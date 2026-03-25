@@ -2,6 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "module": "commonjs",
+    "types": ["node", "jest"],
     "lib": [
       "es6",
       "es2019",
