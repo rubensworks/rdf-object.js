@@ -112,7 +112,7 @@ describe('RdfObjectLoader', () => {
         errorStream._read = () => {
           errorStream.emit('error', new Error('Error stream RdfObjectLoader-test'));
         };
-        await expect(loader.import(errorStream)).rejects.toThrowError('Error stream RdfObjectLoader-test');
+        await expect(loader.import(errorStream)).rejects.toThrow('Error stream RdfObjectLoader-test');
       });
     });
   });
