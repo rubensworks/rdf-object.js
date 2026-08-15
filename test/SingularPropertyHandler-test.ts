@@ -11,7 +11,7 @@ describe('SingularPropertyHandler', () => {
     const object = new Proxy(raw, handler);
 
     it('should be usable as a proxy handler', () => {
-      return expect(object).toBeTruthy();
+      expect(object).toBeTruthy();
     });
 
     it('proxy should not have a non-existing property', () => {
@@ -39,11 +39,11 @@ describe('SingularPropertyHandler', () => {
     });
 
     it('proxy should get a property with an array of size 1', () => {
-      expect(object.one).toEqual('a');
+      expect(object.one).toBe('a');
     });
 
     it('proxy should get a property with an array of size 2', () => {
-      expect(object.two).toEqual('a');
+      expect(object.two).toBe('a');
     });
 
     it('proxy should allow a property to be set', () => {

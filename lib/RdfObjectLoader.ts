@@ -19,14 +19,14 @@ export class RdfObjectLoader {
   private contextError: Error | undefined;
 
   public constructor(args?: IRdfClassLoaderArgs) {
-    this.dataFactory = args?.dataFactory || new DataFactory();
+    this.dataFactory = args?.dataFactory ?? new DataFactory();
     this.normalizeLists = !args || !('normalizeLists' in args) || Boolean(args.normalizeLists);
     this.uniqueLiterals = Boolean(args?.uniqueLiterals);
 
-    this.context = new ContextParser().parse(args && args.context || {})
-      .then(contextResolved => {
+    this.context = new ContextParser().parse(args?.context ?? {})
+      .then((contextResolved) => {
         this.contextResolved = contextResolved;
-      }).catch(error => {
+      }).catch((error) => {
         // Save our error so that we can optionally throw it in .import
         this.contextError = error;
       });
@@ -162,7 +162,7 @@ export class RdfObjectLoader {
    * @return {Promise<void>} A promise that resolves when the stream has ended.
    * @template Q The type of quad, defaults to RDF.Quad.
    */
-  public async import<Q extends RDF.BaseQuad = RDF.Quad>(stream: RDF.Stream<Q>): Promise<void> {
+  public async import<TQ extends RDF.BaseQuad = RDF.Quad>(stream: RDF.Stream<TQ>): Promise<void> {
     await this.context;
     const listMaterializer = new RdfListMaterializer();
     let listMaterializerPromise;
@@ -172,7 +172,7 @@ export class RdfObjectLoader {
 
     // Wait until stream has been handled completely
     const streamPromise = new Promise<void>((resolve, reject) => {
-      stream.on('data', (quad: Q) => {
+      stream.on('data', (quad: TQ) => {
         const subject: Resource = this.getOrMakeResource(quad.subject);
         const predicate: Resource = this.getOrMakeResource(quad.predicate);
         const object: Resource = this.getOrMakeResource(quad.object);
@@ -204,11 +204,11 @@ export class RdfObjectLoader {
   /**
    * Import the given array of RDF quads.
    * Resources will be created and linked for all passed terms.
-   * @param {Q[]} quads An array of RDF quads.
+   * @param {TQ[]} quads An array of RDF quads.
    * @return {Promise<void>} A promise that resolves when the array has been fully imported.
    * @template Q The type of quad, defaults to RDF.Quad.
    */
-  public importArray<Q extends RDF.BaseQuad = RDF.Quad>(quads: Q[]): Promise<void> {
+  public importArray<TQ extends RDF.BaseQuad = RDF.Quad>(quads: TQ[]): Promise<void> {
     return this.import(require('streamify-array')(quads));
   }
 }

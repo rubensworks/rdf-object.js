@@ -20,7 +20,7 @@ export class Resource {
   public list: Resource[] | undefined;
 
   public constructor(args: IResourceArgs) {
-    this.context = args.context || new JsonLdContextNormalized({});
+    this.context = args.context ?? new JsonLdContextNormalized({});
     this.term = args.term;
 
     this.predicates = [];
@@ -107,14 +107,12 @@ export class Resource {
     return {
       '@id': termToString(this.term),
       ...maxDepth !== 0 && Object.keys(this.properties).length > 0 ?
-        {
-          // eslint-disable-next-line unicorn/prefer-object-from-entries
-          properties: Object.keys(this.properties).reduce((acc: any, key) => {
-            acc[key] = this.properties[key].map(resource => resource.toJSON(maxDepth - 1));
-            return acc;
-          }, {}),
-        } :
-        {},
+          {
+
+            properties: Object.fromEntries(Object.keys(this.properties)
+              .map(key => [ key, this.properties[key].map(resource => resource.toJSON(maxDepth - 1)) ])),
+          } :
+          {},
       ...maxDepth !== 0 && this.list ? { list: this.list.map(resource => resource.toJSON(maxDepth - 1)) } : {},
     };
   }

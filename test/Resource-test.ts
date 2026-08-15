@@ -21,51 +21,51 @@ describe('Resource', () => {
     });
 
     it('should save the term', () => {
-      return expect(resource.term).toBe(term);
+      expect(resource.term).toBe(term);
     });
 
     it('should have the correct term type', () => {
-      return expect(resource.type).toEqual('NamedNode');
+      expect(resource.type).toBe('NamedNode');
     });
 
     it('should have the correct value', () => {
-      return expect(resource.value).toEqual('http://example.org/resource1');
+      expect(resource.value).toBe('http://example.org/resource1');
     });
 
     it('should have the correct toString() value', () => {
-      return expect(resource.toString()).toEqual('http://example.org/resource1');
+      expect(resource.toString()).toBe('http://example.org/resource1');
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/resource1'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/resource1'))).toBeTruthy();
     });
 
     it('should be itself for a compacted term', () => {
-      return expect(resource.isA('ex:resource1')).toBeTruthy();
+      expect(resource.isA('ex:resource1')).toBeTruthy();
     });
 
     it('should not be a different compacted term', () => {
-      return expect(resource.isA('ex:resource2')).toBeFalsy();
+      expect(resource.isA('ex:resource2')).toBeFalsy();
     });
 
     it('should be false for a disabled compacted term', () => {
-      return expect(resource.isA('disabled')).toBeFalsy();
+      expect(resource.isA('disabled')).toBeFalsy();
     });
 
     it('should have no predicates', () => {
-      return expect(resource.predicates).toEqual([]);
+      expect(resource.predicates).toEqual([]);
     });
 
     it('should have no properties by URI', () => {
-      return expect(resource.propertiesUri).toEqual({});
+      expect(resource.propertiesUri).toEqual({});
     });
 
     it('should have no properties by shortcut', () => {
-      return expect(resource.properties).toEqual({});
+      expect(resource.properties).toEqual({});
     });
 
     it('should have no properties by single value', () => {
-      return expect(resource.property).toEqual({});
+      expect(resource.property).toEqual({});
     });
 
     describe('property', () => {
@@ -97,7 +97,7 @@ describe('Resource', () => {
 
     describe('toJSON', () => {
       it('without properties and list', () => {
-        expect(resource.toJSON()).toEqual('http://example.org/resource1');
+        expect(resource.toJSON()).toBe('http://example.org/resource1');
       });
 
       it('with properties', () => {
@@ -299,37 +299,37 @@ describe('Resource', () => {
     });
 
     it('should save the term', () => {
-      return expect(resource.term).toBe(term);
+      expect(resource.term).toBe(term);
     });
 
     it('should have the correct term type', () => {
-      return expect(resource.type).toEqual('NamedNode');
+      expect(resource.type).toBe('NamedNode');
     });
 
     it('should have the correct value', () => {
-      return expect(resource.value).toEqual('http://example.org/resource2');
+      expect(resource.value).toBe('http://example.org/resource2');
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/resource2'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/resource2'))).toBeTruthy();
     });
 
     it('should have 1 predicate', () => {
-      return expect(resource.predicates).toEqual([ predicate ]);
+      expect(resource.predicates).toEqual([ predicate ]);
     });
 
     it('should have no properties by URI', () => {
-      return expect(resource.propertiesUri).toEqual({
+      expect(resource.propertiesUri).toEqual({
         'http://example.org/predicate1': [ object ],
       });
     });
 
     it('should have no properties by shortcut', () => {
-      return expect(resource.properties['ex:predicate1']).toEqual([ object ]);
+      expect(resource.properties['ex:predicate1']).toEqual([ object ]);
     });
 
     it('should have no properties by single value', () => {
-      return expect(resource.property['ex:predicate1']).toEqual(object);
+      expect(resource.property['ex:predicate1']).toEqual(object);
     });
   });
 
@@ -355,23 +355,23 @@ describe('Resource', () => {
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
     });
 
     it('should be of Type1', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
     });
 
     it('should be of Type2', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
     });
 
     it('should be of Type3', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
     });
 
     it('should not be of Type4', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
     });
   });
 
@@ -397,23 +397,23 @@ describe('Resource', () => {
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
     });
 
     it('should be of Type1', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
     });
 
     it('should be of Type2', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
     });
 
     it('should be of Type3', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
     });
 
     it('should not be of Type4', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
     });
   });
 
@@ -439,23 +439,23 @@ describe('Resource', () => {
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
     });
 
     it('should be of Type1', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
     });
 
     it('should be of Type2', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
     });
 
     it('should be of Type3', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
     });
 
     it('should not be of Type4', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
     });
   });
 
@@ -482,30 +482,30 @@ describe('Resource', () => {
     });
 
     it('should be itself', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/resource'))).toBeTruthy();
     });
 
     it('should be of Type1', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type1'))).toBeTruthy();
     });
 
     it('should be of Type2', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type2'))).toBeTruthy();
     });
 
     it('should be of Type3', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type3'))).toBeTruthy();
     });
 
     it('should not be of Type4', () => {
-      return expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
+      expect(resource.isA(DF.namedNode('http://example.org/Type4'))).toBeFalsy();
     });
   });
 
   describe('toQuads', () => {
     it('should handle an empty resource', () => {
       const resource = new Resource({ term: DF.blankNode(), context });
-      return expect(resource.toQuads()).toBeRdfIsomorphic([]);
+      expect(resource.toQuads()).toBeRdfIsomorphic([]);
     });
 
     it('should handle a resource with a raw property', () => {
@@ -514,7 +514,7 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p'), context }),
         new Resource({ term: DF.literal('o'), context }),
       );
-      return expect(resource.toQuads()).toBeRdfIsomorphic([
+      expect(resource.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.blankNode(), DF.namedNode('ex:p'), DF.literal('o')),
       ]);
     });
@@ -533,7 +533,7 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p3'), context }),
         new Resource({ term: DF.literal('o3'), context }),
       );
-      return expect(resource.toQuads()).toBeRdfIsomorphic([
+      expect(resource.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.blankNode('b1'), DF.namedNode('ex:p1'), DF.literal('o1')),
         DF.quad(DF.blankNode('b1'), DF.namedNode('ex:p2'), DF.literal('o2')),
         DF.quad(DF.blankNode('b1'), DF.namedNode('ex:p3'), DF.literal('o3')),
@@ -551,7 +551,7 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p1'), context }),
         resourceSub,
       );
-      return expect(resource.toQuads()).toBeRdfIsomorphic([
+      expect(resource.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.namedNode('ex:s')),
         DF.quad(DF.namedNode('ex:s'), DF.namedNode('ex:p2'), DF.literal('o2')),
       ]);
@@ -565,7 +565,7 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p1'), context }),
         resourceList,
       );
-      return expect(resource.toQuads()).toBeRdfIsomorphic([
+      expect(resource.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
       ]);
     });
@@ -580,14 +580,10 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p1'), context }),
         resourceList,
       );
-      return expect(resource.toQuads()).toBeRdfIsomorphic([
+      expect(resource.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.blankNode('l1')),
-        DF.quad(DF.blankNode('l1'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'),
-          DF.literal('a')),
-        DF.quad(DF.blankNode('l1'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
+        DF.quad(DF.blankNode('l1'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'), DF.literal('a')),
+        DF.quad(DF.blankNode('l1'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
       ]);
     });
 
@@ -602,20 +598,12 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p1'), context }),
         resourceList,
       );
-      return expect(resource.toQuads()).toBeRdfIsomorphic([
+      expect(resource.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.blankNode('l1')),
-        DF.quad(DF.blankNode('l1'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'),
-          DF.literal('a')),
-        DF.quad(DF.blankNode('l1'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'),
-          DF.blankNode('l2')),
-        DF.quad(DF.blankNode('l2'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'),
-          DF.literal('b')),
-        DF.quad(DF.blankNode('l2'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
+        DF.quad(DF.blankNode('l1'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'), DF.literal('a')),
+        DF.quad(DF.blankNode('l1'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), DF.blankNode('l2')),
+        DF.quad(DF.blankNode('l2'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'), DF.literal('b')),
+        DF.quad(DF.blankNode('l2'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
       ]);
     });
 
@@ -633,14 +621,10 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p1'), context }),
         resourceList,
       );
-      return expect(resource.toQuads()).toBeRdfIsomorphic([
+      expect(resource.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.blankNode(), DF.namedNode('ex:p1'), DF.blankNode('l1')),
-        DF.quad(DF.blankNode('l1'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'),
-          DF.namedNode('ex:a')),
-        DF.quad(DF.blankNode('l1'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'),
-          DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
+        DF.quad(DF.blankNode('l1'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first'), DF.namedNode('ex:a')),
+        DF.quad(DF.blankNode('l1'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest'), DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil')),
 
         DF.quad(DF.namedNode('ex:a'), DF.namedNode('ex:p2'), DF.literal('o2')),
       ]);
@@ -657,7 +641,7 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p2'), context }),
         resource1,
       );
-      return expect(resource1.toQuads()).toBeRdfIsomorphic([
+      expect(resource1.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:s2')),
         DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:s1')),
       ]);
@@ -679,7 +663,7 @@ describe('Resource', () => {
         new Resource({ term: DF.namedNode('ex:p3'), context }),
         resource1,
       );
-      return expect(resource1.toQuads()).toBeRdfIsomorphic([
+      expect(resource1.toQuads()).toBeRdfIsomorphic([
         DF.quad(DF.namedNode('ex:s1'), DF.namedNode('ex:p1'), DF.namedNode('ex:s2')),
         DF.quad(DF.namedNode('ex:s2'), DF.namedNode('ex:p2'), DF.namedNode('ex:s3')),
         DF.quad(DF.namedNode('ex:s3'), DF.namedNode('ex:p3'), DF.namedNode('ex:s1')),

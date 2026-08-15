@@ -3,6 +3,7 @@ import { RdfListMaterializer } from '../lib/RdfListMaterializer';
 
 const quad = require('rdf-quad');
 const streamifyArray = require('streamify-array');
+
 const DF = new DataFactory();
 
 describe('RdfListMaterializer', () => {
@@ -27,9 +28,7 @@ describe('RdfListMaterializer', () => {
         quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"B"'),
         quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l2'),
         quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"C"'),
-        quad('http://example.org/l2',
-          'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
-          'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+        quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
       ]));
       expect(materializer.getRoots()).toEqual([
         DF.namedNode('http://example.org/l0'),
@@ -37,10 +36,13 @@ describe('RdfListMaterializer', () => {
         DF.namedNode('http://example.org/l2'),
       ]);
       expect(materializer.getList(DF.namedNode('http://example.org/l0'))).toEqual([
-        DF.literal('A'), DF.literal('B'), DF.literal('C'),
+        DF.literal('A'),
+        DF.literal('B'),
+        DF.literal('C'),
       ]);
       expect(materializer.getList(DF.namedNode('http://example.org/l1'))).toEqual([
-        DF.literal('B'), DF.literal('C'),
+        DF.literal('B'),
+        DF.literal('C'),
       ]);
       expect(materializer.getList(DF.namedNode('http://example.org/l2'))).toEqual([
         DF.literal('C'),
@@ -49,9 +51,7 @@ describe('RdfListMaterializer', () => {
 
     it('should parse a valid out-of-order list', async() => {
       await materializer.import(streamifyArray([
-        quad('http://example.org/l2',
-          'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
-          'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+        quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
         quad('http://example.org/listResource', 'http://example.org/listPredicate', 'http://example.org/l0'),
         quad('http://example.org/l0', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l1'),
         quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"B"'),
@@ -65,10 +65,13 @@ describe('RdfListMaterializer', () => {
         DF.namedNode('http://example.org/l1'),
       ]);
       expect(materializer.getList(DF.namedNode('http://example.org/l0'))).toEqual([
-        DF.literal('A'), DF.literal('B'), DF.literal('C'),
+        DF.literal('A'),
+        DF.literal('B'),
+        DF.literal('C'),
       ]);
       expect(materializer.getList(DF.namedNode('http://example.org/l1'))).toEqual([
-        DF.literal('B'), DF.literal('C'),
+        DF.literal('B'),
+        DF.literal('C'),
       ]);
       expect(materializer.getList(DF.namedNode('http://example.org/l2'))).toEqual([
         DF.literal('C'),
@@ -77,9 +80,7 @@ describe('RdfListMaterializer', () => {
 
     it('should parse an empty list', async() => {
       await materializer.import(streamifyArray([
-        quad('http://example.org/listResource',
-          'http://example.org/listPredicate',
-          'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+        quad('http://example.org/listResource', 'http://example.org/listPredicate', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
       ]));
       expect(materializer.getRoots()).toEqual([]);
     });

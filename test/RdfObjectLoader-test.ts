@@ -1,4 +1,4 @@
-import { Readable } from 'stream';
+import { Readable } from 'node:stream';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
 import { RdfObjectLoader } from '../lib/RdfObjectLoader';
@@ -7,6 +7,7 @@ import 'jest-rdf';
 
 const quad = require('rdf-quad');
 const streamifyArray = require('streamify-array');
+
 const DF = new DataFactory<RDF.BaseQuad>();
 
 describe('RdfObjectLoader', () => {
@@ -86,9 +87,7 @@ describe('RdfObjectLoader', () => {
           quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"B"'),
           quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l2'),
           quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"C"'),
-          quad('http://example.org/l2',
-            'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
-            'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+          quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
         ]));
         const valueA = loader.getOrMakeResource(DF.literal('A'));
         const valueB = loader.getOrMakeResource(DF.literal('B'));
@@ -99,9 +98,7 @@ describe('RdfObjectLoader', () => {
 
       it('should normalize an empty list', async() => {
         await loader.import(streamifyArray([
-          quad('http://example.org/listResource',
-            'http://example.org/listPredicate',
-            'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+          quad('http://example.org/listResource', 'http://example.org/listPredicate', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
         ]));
         expect(loader.resources['http://example.org/listResource'].propertiesUri['http://example.org/listPredicate'][0]
           .list).toEqual([]);
@@ -174,9 +171,7 @@ describe('RdfObjectLoader', () => {
           quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"B"'),
           quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l2'),
           quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"C"'),
-          quad('http://example.org/l2',
-            'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
-            'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+          quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
         ]));
         expect(loader.resources['http://example.org/listResource'].propertiesUri['http://example.org/listPredicate'][0]
           .list).toBeFalsy();
@@ -272,7 +267,7 @@ describe('RdfObjectLoader', () => {
 
       it('should handle disabled IRI string values', async() => {
         expect(loader.createCompactedResource('ex:disabled').term.termType)
-          .toEqual('BlankNode');
+          .toBe('BlankNode');
       });
 
       it('should handle resource values', async() => {
@@ -286,25 +281,25 @@ describe('RdfObjectLoader', () => {
       });
 
       it('should handle an empty hash', async() => {
-        expect(loader.createCompactedResource({})!.term).toEqualRdfTerm(DF.blankNode());
+        expect(loader.createCompactedResource({}).term).toEqualRdfTerm(DF.blankNode());
       });
 
       it('should handle a hash with @id', async() => {
         expect(loader.createCompactedResource({
           '@id': 'http://example.org/id',
-        })!.term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
+        }).term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
       });
 
       it('should handle a hash with compacted @id', async() => {
         expect(loader.createCompactedResource({
           '@id': 'ex:id',
-        })!.term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
+        }).term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
       });
 
       it('should handle a hash with disabled @id', async() => {
         expect(loader.createCompactedResource({
           '@id': 'ex:disabled',
-        }).term.termType).toEqual('BlankNode');
+        }).term.termType).toBe('BlankNode');
       });
 
       it('should handle a hash with list', async() => {
@@ -466,7 +461,7 @@ describe('RdfObjectLoader', () => {
       it('should a hash', async() => {
         expect(loader.createCompactedResources({
           '@id': 'http://example.org/id',
-        })[0]!.term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
+        })[0].term).toEqualRdfTerm(DF.namedNode('http://example.org/id'));
       });
 
       it('should an array of hashes', async() => {
@@ -478,7 +473,7 @@ describe('RdfObjectLoader', () => {
             '@id': 'http://example.org/id2',
           },
         ]);
-        expect(resources.length).toEqual(2);
+        expect(resources).toHaveLength(2);
         expect(resources[0].term).toEqualRdfTerm(DF.namedNode('http://example.org/id1'));
         expect(resources[1].term).toEqualRdfTerm(DF.namedNode('http://example.org/id2'));
       });
@@ -530,9 +525,7 @@ describe('RdfObjectLoader', () => {
         quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"B"'),
         quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l2'),
         quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"C"'),
-        quad('http://example.org/l2',
-          'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
-          'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+        quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
       ]));
       const valueA = loader.getOrMakeResource(DF.literal('A'));
       const valueB = loader.getOrMakeResource(DF.literal('B'));
