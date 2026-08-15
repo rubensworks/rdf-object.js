@@ -247,6 +247,13 @@ describe('RdfObjectLoader', () => {
         expect(loader.createCompactedResource('"abc"').term).toEqualRdfTerm(DF.literal('abc'));
       });
 
+      it('should create terms with a custom data factory', async() => {
+        const customLoader = new RdfObjectLoader({
+          dataFactory: new DataFactory({ blankNodePrefix: 'custom' }),
+        });
+        expect(customLoader.createCompactedResource({}).term.value).toMatch(/^custom/u);
+      });
+
       it('should handle boolean values', async() => {
         expect(loader.createCompactedResource(true).term).toEqualRdfTerm(DF.literal('true'));
       });
