@@ -1,3 +1,4 @@
+/* eslint-disable import/no-nodejs-modules -- test fixture builds a Node stream */
 import { Readable } from 'node:stream';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';

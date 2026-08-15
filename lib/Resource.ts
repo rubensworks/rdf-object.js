@@ -26,6 +26,7 @@ export class Resource {
     this.predicates = [];
     this.propertiesUri = {};
     this.properties = new Proxy(this.propertiesUri, new ShortcutPropertyHandler(this.context));
+    // eslint-disable-next-line ts/no-unsafe-assignment -- TODO: type properly, tracked as follow-up typing work
     this.property = <any> new Proxy(this.properties, new SingularPropertyHandler());
   }
 
@@ -105,14 +106,17 @@ export class Resource {
       return termToString(this.term);
     }
     return {
+      // eslint-disable-next-line ts/naming-convention -- JSON-LD keyword, cannot be renamed
       '@id': termToString(this.term),
       ...maxDepth !== 0 && Object.keys(this.properties).length > 0 ?
           {
 
             properties: Object.fromEntries(Object.keys(this.properties)
+              // eslint-disable-next-line ts/no-unsafe-return -- TODO: type properly, tracked as follow-up typing work
               .map(key => [ key, this.properties[key].map(resource => resource.toJSON(maxDepth - 1)) ])),
           } :
           {},
+      // eslint-disable-next-line ts/no-unsafe-return -- TODO: type properly, tracked as follow-up typing work
       ...maxDepth !== 0 && this.list ? { list: this.list.map(resource => resource.toJSON(maxDepth - 1)) } : {},
     };
   }

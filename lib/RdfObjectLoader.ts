@@ -28,6 +28,7 @@ export class RdfObjectLoader {
         this.contextResolved = contextResolved;
       }).catch((error) => {
         // Save our error so that we can optionally throw it in .import
+        // eslint-disable-next-line ts/no-unsafe-assignment -- TODO: type properly, tracked as follow-up typing work
         this.contextError = error;
       });
   }
@@ -77,6 +78,7 @@ export class RdfObjectLoader {
       } else {
         hash = `"${hash}"`;
       }
+      // eslint-disable-next-line ts/no-unsafe-argument -- TODO: type properly, tracked as follow-up typing work
       return this.getOrMakeResource(stringToTerm(hash, this.dataFactory));
     }
 
@@ -87,12 +89,14 @@ export class RdfObjectLoader {
 
     // Wrap terms in resources
     if ('termType' in hash && 'equals' in hash) {
+      // eslint-disable-next-line ts/no-unsafe-argument -- TODO: type properly, tracked as follow-up typing work
       return this.getOrMakeResource(hash);
     }
 
     // Create resource for named node term by @id value, or blank node
     let term: RDF.Term;
     if (hash['@id']) {
+      // eslint-disable-next-line ts/no-unsafe-argument -- TODO: type properly, tracked as follow-up typing work
       const expandedId = this.contextResolved.expandTerm(hash['@id']);
       if (expandedId) {
         term = this.dataFactory.namedNode(expandedId);
@@ -105,6 +109,7 @@ export class RdfObjectLoader {
     const resource: Resource = this.getOrMakeResource(term);
 
     // Iterate over all entries in the hash
+    // eslint-disable-next-line ts/no-unsafe-argument -- TODO: type properly, tracked as follow-up typing work
     for (const [ key, value ] of Object.entries(hash)) {
       // Skip keys starting with '@'
       if (key === '@type') {
@@ -209,6 +214,7 @@ export class RdfObjectLoader {
    * @template Q The type of quad, defaults to RDF.Quad.
    */
   public importArray<TQ extends RDF.BaseQuad = RDF.Quad>(quads: TQ[]): Promise<void> {
+    // eslint-disable-next-line ts/no-unsafe-argument, ts/no-var-requires, ts/no-require-imports
     return this.import(require('streamify-array')(quads));
   }
 }

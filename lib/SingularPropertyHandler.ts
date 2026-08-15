@@ -14,6 +14,7 @@ export class SingularPropertyHandler<T> implements ProxyHandler<Record<string, T
   }
 
   public set(target: Record<string, T[]>, propertyKey: string | symbol, value: any): boolean {
+    // eslint-disable-next-line ts/no-unsafe-assignment -- TODO: type properly, tracked as follow-up typing work
     target[<string> propertyKey] = [ value ];
     return true;
   }
