@@ -31,6 +31,7 @@ export class ShortcutPropertyHandler<T> implements ProxyHandler<Record<string, T
     if (!iri) {
       throw new Error(`Illegal property setting for disabled context key '${this.toTermString(propertyKey)}'`);
     }
+    // eslint-disable-next-line ts/no-unsafe-assignment -- TODO: type properly, tracked as follow-up typing work
     target[iri] = value;
     return true;
   }

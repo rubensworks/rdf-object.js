@@ -12,7 +12,7 @@ describe('ShortcutPropertyHandler', () => {
     const object = new Proxy(raw, handler);
 
     it('should be usable as a proxy handler', () => {
-      return expect(object).toBeTruthy();
+      expect(object).toBeTruthy();
     });
 
     it('proxy should not have a non-existing property', () => {
@@ -70,7 +70,7 @@ describe('ShortcutPropertyHandler', () => {
     const object = new Proxy(raw, handler);
 
     it('should be usable as a proxy handler', () => {
-      return expect(object).toBeTruthy();
+      expect(object).toBeTruthy();
     });
 
     it('proxy should not have a non-existing property', () => {

@@ -8,14 +8,21 @@ const DF = new DataFactory();
  * A helper class for converting RDF lists to JavaScript RDF term term lists
  */
 export class RdfListMaterializer {
+  // eslint-disable-next-line ts/naming-convention -- public API constant
   public static readonly RDF_FIRST: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#first');
+  // eslint-disable-next-line ts/naming-convention -- public API constant
   public static readonly RDF_REST: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest');
+  // eslint-disable-next-line ts/naming-convention -- public API constant
   public static readonly RDF_NIL: RDF.NamedNode = DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil');
 
   private readonly chains: Record<string, { first: RDF.Term; rest: RDF.Term }> = {};
 
-  protected static addChain(chains: Record<string, { first: RDF.Term; rest: RDF.Term }>, subject: RDF.Term,
-    object: RDF.Term, type: 'first' | 'rest'): void {
+  protected static addChain(
+    chains: Record<string, { first: RDF.Term; rest: RDF.Term }>,
+    subject: RDF.Term,
+    object: RDF.Term,
+    type: 'first' | 'rest',
+  ): void {
     const hash: string = termToString(subject);
     if (!chains[hash]) {
       chains[hash] = <{ first: RDF.Term; rest: RDF.Term }> {};
@@ -23,8 +30,11 @@ export class RdfListMaterializer {
     chains[hash][type] = object;
   }
 
-  protected static materializeChain(root: RDF.Term, chains: Record<string, { first: RDF.Term; rest: RDF.Term }>,
-    array?: RDF.Term[]): RDF.Term[] | undefined {
+  protected static materializeChain(
+    root: RDF.Term,
+    chains: Record<string, { first: RDF.Term; rest: RDF.Term }>,
+    array?: RDF.Term[],
+  ): RDF.Term[] | undefined {
     if (!array) {
       array = [];
     }
@@ -46,9 +56,9 @@ export class RdfListMaterializer {
    * @return {Promise<void>} A promise that resolves once the stream has ended.
    * @template Q The type of quad, defaults to RDF.Quad.
    */
-  public import<Q extends RDF.BaseQuad = RDF.Quad>(stream: RDF.Stream<Q>): Promise<void> {
+  public import<TQ extends RDF.BaseQuad = RDF.Quad>(stream: RDF.Stream<TQ>): Promise<void> {
     return new Promise((resolve, reject) => {
-      stream.on('data', (quad: Q) => {
+      stream.on('data', (quad: TQ) => {
         if (quad.predicate.equals(RdfListMaterializer.RDF_FIRST)) {
           RdfListMaterializer.addChain(this.chains, quad.subject, quad.object, 'first');
         } else if (quad.predicate.equals(RdfListMaterializer.RDF_REST)) {
