@@ -3,6 +3,7 @@ import type { JsonLdContextNormalized, JsonLdContext } from 'jsonld-context-pars
 import { ContextParser } from 'jsonld-context-parser';
 import { DataFactory } from 'rdf-data-factory';
 import { stringToTerm, termToString } from 'rdf-string';
+import { streamifyArray } from 'streamify-array';
 import { RdfListMaterializer } from './RdfListMaterializer';
 import { Resource } from './Resource';
 
@@ -209,7 +210,7 @@ export class RdfObjectLoader {
    * @template Q The type of quad, defaults to RDF.Quad.
    */
   public importArray<Q extends RDF.BaseQuad = RDF.Quad>(quads: Q[]): Promise<void> {
-    return this.import(require('streamify-array')(quads));
+    return this.import(streamifyArray(quads));
   }
 }
 
