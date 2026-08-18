@@ -1,8 +1,8 @@
 import { DataFactory } from 'rdf-data-factory';
+import { streamifyArray } from 'streamify-array';
 import { RdfListMaterializer } from '../lib/RdfListMaterializer';
 
 const quad = require('rdf-quad');
-const streamifyArray = require('streamify-array');
 const DF = new DataFactory();
 
 describe('RdfListMaterializer', () => {

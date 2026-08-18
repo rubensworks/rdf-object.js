@@ -1,12 +1,12 @@
 import { Readable } from 'stream';
 import type * as RDF from '@rdfjs/types';
 import { DataFactory } from 'rdf-data-factory';
+import { streamifyArray } from 'streamify-array';
 import { RdfObjectLoader } from '../lib/RdfObjectLoader';
 import { Resource } from '../lib/Resource';
 import 'jest-rdf';
 
 const quad = require('rdf-quad');
-const streamifyArray = require('streamify-array');
 const DF = new DataFactory<RDF.BaseQuad>();
 
 describe('RdfObjectLoader', () => {
