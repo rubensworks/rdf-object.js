@@ -97,6 +97,22 @@ describe('RdfObjectLoader', () => {
           .list).toEqual([ valueA, valueB, valueC ]);
       });
 
+      it('should not duplicate list quads on toQuads after normalizing a list', async() => {
+        const input = [
+          quad('http://example.org/s', 'http://example.org/p', 'http://example.org/l0'),
+          quad('http://example.org/l0', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"a"'),
+          quad('http://example.org/l0', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l1'),
+          quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"b"'),
+          quad('http://example.org/l1', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'http://example.org/l2'),
+          quad('http://example.org/l2', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first', '"c"'),
+          quad('http://example.org/l2',
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'),
+        ];
+        await loader.importArray([ ...input ]);
+        expect(loader.resources['http://example.org/s'].toQuads()).toBeRdfIsomorphic(input);
+      });
+
       it('should normalize an empty list', async() => {
         await loader.import(streamifyArray([
           quad('http://example.org/listResource',

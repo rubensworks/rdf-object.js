@@ -146,7 +146,10 @@ export class Resource {
     }
 
     // Handle RDF lists
-    if (this.list) {
+    // If the list was imported and normalized, its rdf:first/rdf:rest quads are already
+    // present in propertiesUri and were emitted above. Re-synthesizing them here would
+    // duplicate the chain, so only synthesize lists that have no such quads.
+    if (this.list && !this.propertiesUri[termToString(RdfListMaterializer.RDF_FIRST)]) {
       let chain = this.term;
       let chainPrev;
       for (const element of this.list) {
